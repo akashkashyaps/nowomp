@@ -125,7 +125,7 @@ class WorkoutForegroundService : Service() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Workout in progress")
             .setContentText("Tap to open NoWomp and finish")
-            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setSmallIcon(R.drawable.notification_icon)
             .setContentIntent(pendingIntent)
             // Ongoing + no auto-cancel is what makes it unswipeable.
             .setOngoing(true)

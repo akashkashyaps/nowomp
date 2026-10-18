@@ -4,7 +4,7 @@
     "slug": "NoWomp",
     "version": "2.0.0",
     "splash": {
-      "image": "./assets/images/icon.png",
+      "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#0B0B0B"
     },
@@ -63,11 +63,13 @@
       "versionCode": 3,
       "allowBackup": false,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#0B0B0B"
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundImage": "./assets/images/adaptive-icon-background.png",
+        "monochromeImage": "./assets/images/adaptive-icon-monochrome.png",
+        "backgroundColor": "#c4240e"
       },
       "notification": {
-        "icon": "./assets/images/icon.png",
+        "icon": "./assets/images/notification-icon.png",
         "color": "#A8FF3E"
       },
       "permissions": [

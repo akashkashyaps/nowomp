@@ -32,16 +32,22 @@ Play, plus the state of the things that happen inside it.
 updated on Play again.** The credentials are in `~/.gradle/gradle.properties`;
 back those up too.
 
-## 2. Store assets — none exist yet
+## 2. Store assets
 
-`assets/images/` has `icon.png`, `logo.png` and `favicon.png` as three
-byte-identical copies of one 215 KB image. Needed:
+The app icon is the pixel-art "fire eyes" penguin, drawn from the same pixel
+grid as the trophies. Done:
 
-- **App icon** 512×512 PNG
-- **Feature graphic** 1024×500 — mandatory, no default
+- **App icon** 512×512 PNG: `docs/images/play-store-icon.png`
+- Launcher icons (adaptive, round and Android 13 themed), splash logo and the
+  notification silhouette, in `android/app/src/main/res/` and `assets/images/`
+- Favicon: `assets/images/favicon.png` (48 px)
+
+Still needed:
+
+- **Feature graphic** 1024×500. Mandatory, with no default. It can reuse the
+  look of `docs/images/social-preview.png`.
 - **Phone screenshots**, at least 2 (8 allowed). The strongest visuals are the
-  Health tab recovery ring, the sleep hypnogram, and the Journeys card.
-- A real favicon rather than a full-size icon copy
+  Lab, the trophy room, the experiment result and the widget moods.
 
 ## 3. Health Connect declaration — the most likely rejection
 
