@@ -18,7 +18,6 @@ Schedule it. Show up. Or explain yourself, and let your own body fact-check the 
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-FF8A1F?style=flat-square)](CONTRIBUTING.md)
 
 [![Checks](https://img.shields.io/github/actions/workflow/status/akashkashyaps/nowomp/checks.yml?branch=main&style=flat-square&label=checks)](https://github.com/akashkashyaps/nowomp/actions/workflows/checks.yml)
-[![Release](https://img.shields.io/github/v/release/akashkashyaps/nowomp?style=flat-square)](https://github.com/akashkashyaps/nowomp/releases)
 [![Stars](https://img.shields.io/github/stars/akashkashyaps/nowomp?style=flat-square)](https://github.com/akashkashyaps/nowomp/stargazers)
 [![Issues](https://img.shields.io/github/issues/akashkashyaps/nowomp?style=flat-square)](https://github.com/akashkashyaps/nowomp/issues)
 
