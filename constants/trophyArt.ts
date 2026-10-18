@@ -602,30 +602,13 @@ const POWER_PALETTE: Record<string, string> = {
   '%': '#FFF6C2', // aura inner glow
   '&': '#FFB800', // aura outer
   '$': '#FFE45C', // aura mid
-  '^': '#E8960C', // crest body: deeper amber so it reads against the aura
+  '~': '#B8862A', // rim light on his body from the aura's glow
 };
 Object.assign(PALETTE, POWER_PALETTE);
 
-/** Tall swept crest: the powered form's energy rising off his head. */
-const CREST = [
-  '...........Y..........Y.....',
-  '..........YY.........YY.....',
-  '....Y....YCY........YCY.....',
-  '....YY...YCY...Y...YCCY..Y..',
-  '....YCY.YCCY..YY..YCCY..YY..',
-  '.....YCYYCCY.YCY.YCCCY.YCY..',
-  '.....YCCYCCCYYCY.YCCCYYCY...',
-  '..Y..YCCCCCCYCCCYCCCCYCCY...',
-  '..YY.YCCCCCCCCCCCCCCCCCY....',
-  '...YCCCCCCCCCCCCCCCCCCCY....',
-  '....cCCCCCCCCCCCCCCCCCc.....',
-  '.....cccccccccccccccccc.....',
-];
 
 const PX = 12;
 const PY = 28;
-const CX = PX - 2;
-const CY = PY - 11;
 
 type PGrid = string[][];
 const newGrid = (): PGrid => Array.from({ length: POWER_H }, () => Array(POWER_W).fill('.'));
@@ -672,7 +655,7 @@ export function composePowerUp(frame: number): string[] {
   const cx = PX + 12;
   const cy = PY + 10;
   const rx = 19;
-  const ryTop = 22;
+  const ryTop = 19;
   const ryBottom = 16;
   const phase = (frame / POWER_FRAMES) * Math.PI * 2;
   const tongue = (x: number) => {
@@ -697,9 +680,17 @@ export function composePowerUp(frame: number): string[] {
 
   putOn(g, PENGUIN, PX, PY);
   hotEyes(g);
-
-  // No outline: a deeper amber crest reads against the pale aura on its own.
-  putOn(g, CREST.map((r) => r.replace(/C/g, '^')), CX, CY);
+  // Golden rim light: the dark body pixels just inside his outline catch the
+  // aura's glow, so he looks lit by his own power.
+  const body = new Set(['B', 'b']);
+  const rim: [number, number][] = [];
+  for (let y = PY; y < PY + PENGUIN.length; y++)
+    for (let x = PX; x < PX + PENGUIN[0].length; x++) {
+      if (!body.has(g[y][x])) continue;
+      const nearOutline = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => g[y + dy]?.[x + dx] === 'K');
+      if (nearOutline) rim.push([x, y]);
+    }
+  rim.forEach(([x, y]) => (g[y][x] = '~'));
   return g.map((r) => r.join(''));
 }
 

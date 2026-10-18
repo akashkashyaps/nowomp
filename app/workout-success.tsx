@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { UserService } from '@/services/UserService';
+import { WorkoutService } from '@/services/WorkoutService';
 import { AchievementService } from '@/services/AchievementService';
 import { PowerUpTransformation, Shockwave } from '@/components/celebration/PowerUpHero';
 import { PixelConfetti } from '@/components/celebration/PixelConfetti';
@@ -24,9 +25,9 @@ const fmtClock = (secs: number) => {
 };
 
 /**
- * Workout complete. Deliberately sparse: the transformation is the moment,
- * then just the time, the streak and one button. Rare events (milestone,
- * freeze token, journey) get a single pill, never a stack of cards.
+ * Workout complete. The transformation is the moment; underneath, only what's
+ * worth knowing right now — the time, and one slim row of three numbers.
+ * Rare events (milestone, freeze token, journey) get a single pill.
  */
 export default function WorkoutSuccessScreen() {
   const insets = useSafeAreaInsets();
@@ -42,6 +43,9 @@ export default function WorkoutSuccessScreen() {
   const [title] = useState(() => TITLES[Math.floor(Math.random() * TITLES.length)]);
   const [burst, setBurst] = useState(false);
   const [isBest, setIsBest] = useState(false);
+  const [week, setWeek] = useState<number | null>(null);
+  // This session against your average, in whole minutes.
+  const [vsAvg, setVsAvg] = useState<number | null>(null);
   const [clockText, setClockText] = useState(fmtClock(0));
   // Where the penguin actually sits, so the confetti bursts out of him.
   const [heroY, setHeroY] = useState<number | null>(null);
@@ -63,9 +67,13 @@ export default function WorkoutSuccessScreen() {
     UserService.getHighestStreak()
       .then((best) => setIsBest(streakCount > 1 && streakCount >= best))
       .catch(() => {});
+    WorkoutService.getThisWeekWorkouts().then(setWeek).catch(() => {});
+    WorkoutService.getAverageGymDuration()
+      .then((avg) => setVsAvg(avg > 0 && seconds > 0 ? Math.round((seconds - avg) / 60) : null))
+      .catch(() => {});
     const id = clock.addListener(({ value }) => setClockText(fmtClock(value)));
     return () => clock.removeListener(id);
-  }, [clock, streakCount]);
+  }, [clock, streakCount, seconds]);
 
   const onBurst = () => {
     setBurst(true);
@@ -103,10 +111,31 @@ export default function WorkoutSuccessScreen() {
         <Animated.Text style={[styles.title, fadeUp(0), { transform: [{ scale: reveal.interpolate({ inputRange: [0, 1], outputRange: [0.6, 1] }) }] }]}>
           {title}
         </Animated.Text>
-        <Animated.Text style={[styles.duration, fadeUp(0.2)]}>{clockText}</Animated.Text>
-        <Animated.Text style={[styles.streak, fadeUp(0.4)]}>
-          🔥 {streakCount} STREAK{isBest ? '  ·  NEW BEST' : ''}
-        </Animated.Text>
+        <Animated.View style={[styles.durationBox, fadeUp(0.2)]}>
+          <Text style={styles.duration}>{clockText}</Text>
+          <Text style={styles.durationLabel}>DURATION</Text>
+        </Animated.View>
+
+        {/* One slim row, three numbers. */}
+        <Animated.View style={[styles.stats, fadeUp(0.4)]}>
+          <View style={styles.stat}>
+            <Text style={[styles.statValue, { color: colors.accent }]}>{streakCount}</Text>
+            <Text style={styles.statLabel}>STREAK</Text>
+            {isBest && <Text style={styles.best}>NEW BEST</Text>}
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.stat}>
+            <Text style={styles.statValue}>{week ?? '–'}</Text>
+            <Text style={styles.statLabel}>THIS WEEK</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.stat}>
+            <Text style={styles.statValue}>
+              {vsAvg == null ? '–' : `${vsAvg > 0 ? '+' : vsAvg < 0 ? '−' : ''}${Math.abs(vsAvg)}m`}
+            </Text>
+            <Text style={styles.statLabel}>VS AVERAGE</Text>
+          </View>
+        </Animated.View>
         {pill && (
           <Animated.View style={[styles.pill, fadeUp(0.6)]}>
             <Text style={styles.pillText} numberOfLines={1}>
@@ -122,7 +151,7 @@ export default function WorkoutSuccessScreen() {
         </TouchableOpacity>
       </Animated.View>
 
-      {burst && <PixelConfetti originX={width / 2} originY={heroY ?? insets.top + HERO_WIDTH} burst={48} rain={20} />}
+      {burst && <PixelConfetti originX={width / 2} originY={heroY ?? insets.top + HERO_WIDTH} />}
 
       {/* The burst flash: white-gold, gone in half a second. */}
       <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.flash, { opacity: flash }]} />
@@ -135,8 +164,26 @@ const styles = StyleSheet.create({
   top: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 },
   hero: { alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
   title: { fontFamily: fonts.heading, fontSize: 44, color: colors.text, textAlign: 'center' },
-  duration: { fontFamily: fonts.numericHeavy, fontSize: 40, color: colors.cyan, marginTop: 6 },
-  streak: { fontFamily: fonts.bodyBold, fontSize: 14, letterSpacing: 2, color: colors.accent, marginTop: 10 },
+  durationBox: { alignItems: 'center', marginTop: 4 },
+  duration: { fontFamily: fonts.numericHeavy, fontSize: 40, color: colors.text },
+  durationLabel: { fontFamily: fonts.bodyBold, fontSize: 10, letterSpacing: 2, color: colors.textDim, marginTop: 2 },
+  stats: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    marginTop: 22,
+    paddingVertical: 14,
+    borderRadius: 16,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    width: '100%',
+    maxWidth: 360,
+  },
+  stat: { flex: 1, alignItems: 'center' },
+  statValue: { fontFamily: fonts.numericHeavy, fontSize: 22, color: colors.text },
+  statLabel: { fontFamily: fonts.bodyBold, fontSize: 10, letterSpacing: 1, color: colors.textMuted, marginTop: 4 },
+  best: { fontFamily: fonts.bodyBold, fontSize: 9, letterSpacing: 1, color: colors.warn, marginTop: 3 },
+  divider: { width: 1, backgroundColor: colors.border, marginVertical: 2 },
   pill: {
     marginTop: 18,
     paddingHorizontal: 16,
