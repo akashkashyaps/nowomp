@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Platform, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-import { createAudioPlayer } from 'expo-audio';
 import { UserService } from '@/services/UserService';
 import { WorkoutService } from '@/services/WorkoutService';
 import { LocationService } from '@/services/LocationService';
@@ -11,6 +10,7 @@ import { NotificationService } from '@/services/NotificationService';
 import { JourneyService } from '@/services/JourneyService';
 import { FreezeTokenService } from '@/services/FreezeTokenService';
 import { RedemptionWorkoutService } from '@/services/RedemptionWorkoutService';
+import { REDEMPTION_BLOCKS_EXCUSES } from '@/services/ExcuseSubmissionService';
 import { CalendarDays } from 'lucide-react-native';
 import { TourTarget, useFirstVisitTour } from '@/components/tour/Tour';
 import { HOME_TOUR, HOME_TOUR_STEPS } from '@/constants/tour';
@@ -287,64 +287,10 @@ export default function HomeScreen() {
   const handleEndWorkout = async () => {
     if (!currentWorkout) return;
 
-    // Trigger IMMEDIATE celebratory feedback (sound + haptics) SYNCHRONOUSLY
-    // Start crescendo vibration immediately
-
-    if (Platform.OS === 'android') {
-      const pattern = [0, 200, 0, 300, 0, 300];
-      try {
-        Vibration.vibrate(pattern);
-      } catch {
-        Vibration.vibrate([0, 200, 50, 300, 50, 300]);
-      }
-    } else {
-      // iOS: Escalating haptic pattern
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      setTimeout(
-        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
-        100,
-      );
-      setTimeout(
-        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
-        200,
-      );
-      setTimeout(
-        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
-        300,
-      );
-      setTimeout(
-        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
-        500,
-      );
-      setTimeout(
-        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
-        600,
-      );
-      setTimeout(
-        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
-        700,
-      );
-    }
-
-    // Play completion sound IMMEDIATELY (synchronous, no await)
-    try {
-      const player = createAudioPlayer(
-        require('@/assets/sounds/workout-complete.wav'),
-      );
-      player.volume = 0.8;
-      player.play();
-
-      // Cleanup after 3 seconds (sound duration)
-      setTimeout(() => {
-        try {
-          player.remove();
-        } catch {
-          console.log('Player already removed');
-        }
-      }, 3000);
-    } catch (error) {
-      console.error('Error playing immediate sound:', error);
-    }
+    // A light tick so the tap feels instant. The celebration's sound and
+    // rumble belong to the workout-complete screen, timed to its animation;
+    // playing them here made the burst silent and doubled the haptics.
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     setLoading(true);
     try {
@@ -412,6 +358,10 @@ export default function HomeScreen() {
 
   const handleMakeExcuse = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (activeRedemption) {
+      Alert.alert(REDEMPTION_BLOCKS_EXCUSES.title, REDEMPTION_BLOCKS_EXCUSES.message);
+      return;
+    }
     router.push('/excuse');
   };
 
@@ -600,7 +550,8 @@ export default function HomeScreen() {
               (!todayWorkout ||
                 todayStatus.hasCompleted ||
                 todayStatus.hasSkipped ||
-                currentWorkout) &&
+                currentWorkout ||
+                activeRedemption) &&
                 styles.buttonDisabled,
             ]}
             onPress={

@@ -10,6 +10,16 @@ import { SkipService } from './SkipService';
 export const excuseTypeFor = (label: string): 'medical' | 'emergency' | 'other' =>
   label === 'Sick / Injured' ? 'medical' : label === 'Genuine Emergency' ? 'emergency' : 'other';
 
+/**
+ * Shown when an excuse is attempted during an active redemption. Excuses are
+ * blocked then: redemption is the last chance, and an excuse can't cancel it.
+ * The missed-workout lock screen is the exception (it can't be refused).
+ */
+export const REDEMPTION_BLOCKS_EXCUSES = {
+  title: '🔄 NO EXCUSES IN REDEMPTION',
+  message: "You're in redemption. Excuses are off until it's done. Finish your redemption workout to save your streak.",
+};
+
 export interface ExcuseOutcome {
   freezeUsed: boolean;
   redemptionTriggered: boolean;

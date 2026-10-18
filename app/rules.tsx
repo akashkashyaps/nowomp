@@ -94,6 +94,7 @@ const SECTIONS: Section[] = [
       'If you have a workout scheduled in the next 48 hours, complete it on time.',
       'If not, you get 48 hours, starting tomorrow, to do any workout.',
       "A redemption workout saves your streak but doesn't add to it.",
+      "No excuses while a redemption is active. Finish it first.",
       'Available once every 7 days. If you fail it, or have used it this week, your streak resets.',
     ],
   },

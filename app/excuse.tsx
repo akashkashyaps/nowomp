@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'rea
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { SkipService } from '@/services/SkipService';
-import { ExcuseSubmissionService } from '@/services/ExcuseSubmissionService';
+import { ExcuseSubmissionService, REDEMPTION_BLOCKS_EXCUSES } from '@/services/ExcuseSubmissionService';
 import { FreezeTokenService } from '@/services/FreezeTokenService';
 import { RedemptionWorkoutService } from '@/services/RedemptionWorkoutService';
 import { ExcuseMessageService } from '@/services/ExcuseMessageService';
@@ -23,10 +23,14 @@ export default function ExcuseScreen() {
   const [showMotivationModal, setShowMotivationModal] = useState(false);
   const [motivationalMessage, setMotivationalMessage] = useState<{title: string; message: string} | null>(null);
   const [pendingExcuse, setPendingExcuse] = useState<string | null>(null);
+  const [inRedemption, setInRedemption] = useState(false);
 
   useEffect(() => {
     checkTodaySkip();
     loadTokenCount();
+    RedemptionWorkoutService.getActiveRedemptionWorkout()
+      .then((r) => setInRedemption(!!r))
+      .catch(() => setInRedemption(false));
   }, []);
 
   const checkTodaySkip = async () => {
@@ -61,6 +65,12 @@ export default function ExcuseScreen() {
         'You already made an excuse today! One excuse per day is more than enough.',
         [{ text: 'Fine...', style: 'destructive' }]
       );
+      return;
+    }
+    if (inRedemption) {
+      Alert.alert(REDEMPTION_BLOCKS_EXCUSES.title, REDEMPTION_BLOCKS_EXCUSES.message, [
+        { text: 'Fine', onPress: () => router.back() },
+      ]);
       return;
     }
 

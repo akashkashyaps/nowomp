@@ -70,6 +70,9 @@ export default function MandatoryExcuseScreen() {
           } else {
             message += '\n\n🔄 REDEMPTION MODE ACTIVE\n\nYou don\'t have any workouts scheduled in the next 48 hours.\n\nComplete ANY workout before the deadline to save your streak.\n\n⏰ You have 48 hours starting tomorrow\n\nThis workout won\'t increase your streak, just preserve it.';
           }
+        } else if (await RedemptionWorkoutService.getActiveRedemptionWorkout()) {
+          // Excuses are blocked during redemption, so this one changes nothing.
+          message += "\n\n🔄 You're still in redemption. This excuse doesn't count. Finish your redemption workout before the deadline to save your streak.";
         } else {
           message += '\n\n💔 Your streak has been reset.';
         }
