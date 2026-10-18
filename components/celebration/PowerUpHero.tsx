@@ -2,6 +2,7 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import * as Haptics from 'expo-haptics';
+import { createAudioPlayer, type AudioPlayer } from 'expo-audio';
 import {
   composeCharging,
   composePowerUp,
@@ -15,6 +16,19 @@ import {
 
 const CHARGE_MS = 1150;
 const FRAME_MS = 70;
+
+const SPARKLE_DELAY_MS = 350;
+
+/** Loads a sound up front so it starts with no delay; null if audio is unavailable. */
+const loadSound = (source: number, volume: number): AudioPlayer | null => {
+  try {
+    const player = createAudioPlayer(source);
+    player.volume = volume;
+    return player;
+  } catch {
+    return null;
+  }
+};
 
 const chargingPaths = toPaths(composeCharging());
 const framePaths = Array.from({ length: POWER_FRAMES }, (_, i) => toPaths(composePowerUp(i)));
@@ -91,6 +105,15 @@ export function PowerUpTransformation({ width = 220, onBurst }: { width?: number
     const running: Animated.CompositeAnimation[] = [];
     const timers: ReturnType<typeof setTimeout>[] = [];
 
+    // The three 8-bit cues are timed to the animation: the charge sound runs
+    // with the shake, the burst lands on the flash, the sparkle on the stars.
+    const sounds = {
+      charge: loadSound(require('@/assets/sounds/powerup-charge.wav'), 0.65),
+      burst: loadSound(require('@/assets/sounds/powerup-burst.wav'), 1),
+      sparkle: loadSound(require('@/assets/sounds/powerup-sparkle.wav'), 0.5),
+    };
+    sounds.charge?.play();
+
     // --- charge
     const shake = Animated.loop(
       Animated.sequence([
@@ -119,6 +142,8 @@ export function PowerUpTransformation({ width = 220, onBurst }: { width?: number
         setPowered(true);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        sounds.burst?.play();
+        timers.push(setTimeout(() => sounds.sparkle?.play(), SPARKLE_DELAY_MS));
         onBurst?.();
         pop.setValue(1.3);
         Animated.spring(pop, { toValue: 1, friction: 3, tension: 90, useNativeDriver: true }).start();
@@ -165,6 +190,7 @@ export function PowerUpTransformation({ width = 220, onBurst }: { width?: number
     return () => {
       timers.forEach(clearTimeout);
       running.forEach((a) => a.stop());
+      Object.values(sounds).forEach((s) => s?.remove());
     };
     // Runs once per mount: the transformation is a one-shot sequence.
     // eslint-disable-next-line react-hooks/exhaustive-deps
