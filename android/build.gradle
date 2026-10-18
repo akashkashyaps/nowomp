@@ -1,0 +1,32 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath('com.android.tools.build:gradle')
+    classpath('com.facebook.react:react-native-gradle-plugin')
+    classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
+  }
+}
+
+allprojects {
+  repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://www.jitpack.io' }
+  }
+}
+
+// Health Connect requires API 26+. expo-build-properties injects this at prebuild
+// time; setting it here too means a build straight from the committed android/
+// directory still gets 26. The expo-root-project plugin uses setIfNotExist, so
+// this value wins rather than conflicting.
+ext {
+  minSdkVersion = 26
+}
+
+apply plugin: "expo-root-project"
+apply plugin: "com.facebook.react.rootproject"

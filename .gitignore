@@ -1,0 +1,57 @@
+# dependencies
+node_modules/
+
+# expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# signing — the upload keystore must never be committed. Losing it means the
+# app can never be updated on Play, so back it up outside this directory.
+*.keystore
+!android/app/debug.keystore
+keystore.properties
+
+# metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macos
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+.env
+
+# typescript
+*.tsbuildinfo
+
+# Android build output and machine-specific files. The android/ project itself
+# is committed (it has hand-written native code), but never what it builds.
+android/.gradle/
+android/build/
+android/app/build/
+android/app/.cxx/
+android/.cxx/
+android/.kotlin/
+android/local.properties
+android/captures/
+*.apk
+*.aab
+*.hprof
+.idea/
+*.iml

@@ -1,0 +1,38 @@
+# Changelog
+
+All notable changes to NoWomp are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
+
+## [2.0.0] - 2026-10-18
+
+### Added
+- **The Lab**: an excuse fact-check against sleep, recovery, steps, heart rate and the journal; skip patterns by weekday and time of day; habits → next-morning body effects; best time to train.
+- **Self-experiments**: 4-week ABAB experiments with a randomised start, pre-registered main measure, daily check-ins and locked results; 12 templates suggested from your own data; design your own.
+- **AI bridge**: copy-paste prompts for designing an experiment or explaining its result, plus `nowomp://experiments` links to load an AI-designed experiment. The app never calls an AI itself.
+- **Trophies**: 35 pixel-art medals across bronze, silver, gold, Lab and a hidden Hall of Shame, with an animated unlock celebration.
+- **Home-screen widget**: a penguin whose mood follows your day; resizable down to one tile; poke him.
+- **Workout complete**: a power-up transformation and pixel confetti.
+- **Streak milestones** at 7, 14, 30, 50, 100, 150, 200 and 365.
+- **Sunday recap**: a weekly summary screen and notification.
+- **Guided tours** on Today, Health, Lab and You, plus a "How NoWomp works" rules page.
+- **Four new excuses**: Sick / Injured, Work Commitments, Family / Social Plans, Travelling.
+- **Background reliability card** for phone makers that kill background apps.
+- **Monthly backup reminder**.
+- Test-data generator in the hidden developer panel.
+
+### Changed
+- **Navigation**: four tabs (Today, Health, Lab, You). Plan and Settings open from Today and You.
+- **Backups**: format v6 now includes trophies, experiments and experiment check-ins.
+- **Deep links**: the URL scheme is now `nowomp://` (was `myapp://`).
+- **Notifications**: the permission is now only requested when you do something that needs it, not on every launch.
+- Excuses are recorded through a single path that writes the excuse and its consequence together, with the correct type (medical, emergency, other).
+- Older screens now use the shared theme tokens.
+- Licensed under **AGPLv3**.
+
+### Fixed
+- Restoring a backup that contained recorded workouts failed its integrity check.
+- Saving a recurring schedule would have cancelled every other scheduled notification.
+- Some trophy art clipped against the medal rim.
+
+## [1.1.0]
+
+Previous release, before the 2.0 redesign.

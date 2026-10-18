@@ -1,0 +1,60 @@
+NoWomp Privacy Policy
+
+Effective date: October 18, 2026
+
+NoWomp ("the App") is a gym accountability app built to help you stay consistent with your workout schedule. Your privacy matters. This policy explains what data the App accesses, how it is used, and your rights.
+
+NoWomp is open source under the GNU Affero General Public License v3. This policy covers the official builds published by the NoWomp project. Modified versions built by others are their responsibility.
+
+1. Data Storage
+All your data is stored locally on your device, in an on-device SQLite database and the App's private storage. No data is transmitted to any server, cloud service or third party. We do not collect, store or process any of your personal data on our servers. We do not have servers.
+
+2. Information the App Stores Locally
+The following information is stored exclusively on your device:
+  - User profile: your name and settings, and optionally your age, biological sex, sleep goal, steps goal and measured maximum heart rate, which improve the accuracy of the App's calculations.
+  - Locations: the coordinates of the gym and/or home location you register, used to verify workouts.
+  - Workout records: dates, start and end times, durations and completion status.
+  - Schedule data: your scheduled workouts and planned times.
+  - Excuses: the excuses you log, when you logged them, the planned time of the workout you skipped, and what followed (freeze token used or redemption started).
+  - Freeze tokens and redemption workouts: earned, used and expired tokens, and redemption attempts.
+  - Daily journal (optional): anything you choose to log, such as food notes, last meal time, alcohol, caffeine, stress level and free-text notes.
+  - Health metrics: if you connect Health Connect, a cached copy of the readings listed in Section 3, plus the Recovery and Sleep scores the App calculates from them.
+  - Trophies: which achievements you have unlocked and when.
+  - Experiments: the self-experiments you run, your daily check-ins, and their results.
+  - Lab insights: excuse fact-checks, habit patterns, best-time-to-train and weekly recap figures. These are calculated on your device from the data above whenever you view them.
+  - Home-screen widget: a small summary (your streak and today's workout status) kept in the App's storage so the widget can display it. Anyone who can see your home screen can see what the widget shows.
+
+3. Device Permissions
+The App requests the following permissions, all used solely on-device:
+  - Location (fine and coarse): used to verify you are at your registered gym or home location when you start a workout. Your location is checked at that moment and is not stored or sent anywhere.
+  - Notifications: local reminders about scheduled workouts, redemption deadlines, experiment check-ins and your weekly recap. All notifications are generated on your device.
+  - Exact alarm / boot completed: so local reminders still fire on time after a restart.
+  - Vibrate: haptic feedback.
+  - Foreground service: while a workout is running, the App shows an ongoing notification with a timer so the session keeps counting when you leave the App. It starts only when you start a workout, stops when it ends, reads no sensors, and records nothing beyond the workout entry described in Section 2.
+  - Internet: used only to display an embedded map when you look up your gym's coordinates, and to open links (such as this policy) in your browser. The App sends none of your data over the internet.
+  - Health Connect (read): with your explicit permission, the App reads heart rate variability, resting heart rate, heart rate, sleep sessions and stages, steps, distance, total and active calories burned, weight and exercise sessions from Android Health Connect. This data is read on-device only, cached in the App's local database to calculate your scores and insights, and never transmitted off your device. You can revoke access at any time in Health Connect settings; uninstalling the App removes the cached copy.
+  - Health Connect (write, optional, off by default): weight is the only thing the App can write, and only if you turn on "Also save to Health Connect" when logging weight. That weight then becomes visible to other apps you have granted Health Connect access. The App writes nothing else and never deletes your Health Connect data.
+
+4. Copying Data Out of the App (only when you choose to)
+  - Backups: when you use Export, the App creates a file containing all of your data, including health data, and hands it to the Android share sheet. You choose where it goes. The file is not encrypted, so store it somewhere you trust.
+  - AI prompts: some features (such as "Ask an AI", "Design one with AI" and "Explain my result with AI") copy a text summary of your data to the clipboard so you can paste it into an AI assistant of your choice. The App never sends anything to an AI service itself. If you paste the text into a third-party service, that service's own privacy policy applies.
+  - Pasting into the App: "Paste from AI" reads the clipboard only at the moment you tap it.
+
+5. Data Collection & Sharing
+We do not collect any data. Since all data stays on your device, there is nothing for us to share. The App:
+  - does not use analytics or tracking services;
+  - does not contain advertisements;
+  - does not transmit any of your personal or health data over the internet;
+  - does not use third-party SDKs that collect user data.
+
+6. Data Retention & Deletion
+Your data stays on your device as long as the App is installed. You can delete it at any time by clearing the App's data in your device settings, or by uninstalling the App. Backup files you exported are not deleted automatically; delete them wherever you saved them.
+
+7. Children's Privacy
+The App is not directed at children under 13. We do not knowingly collect any personal information from children.
+
+8. Changes to This Policy
+We may update this policy from time to time. Changes will appear here with a new effective date, and the full history is visible in the project's public source repository.
+
+9. Contact
+Questions about this policy: developernowomp@gmail.com
