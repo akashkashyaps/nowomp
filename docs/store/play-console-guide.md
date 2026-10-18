@@ -33,59 +33,67 @@ and Play delivers the right one to each phone.)
 
 ## 2. Store listing
 
-**Grow users → Store presence → Main store listing**
+**Grow users → Store presence → Main store listing.** The default language is
+**English (United Kingdom) – en-GB**. Fill in en-GB first; adding an
+**English (United States) – en-US** translation with the same text helps US search.
 
 **App name** (max 30)
 ```
-NoWomp: Gym Accountability
+NoWomp: Stop Skipping the Gym
 ```
 
 **Short description** (max 80)
 ```
-Show up or explain yourself. Your own health data fact-checks every excuse.
+The gym habit app that calls out your excuses using your own sleep & recovery.
 ```
 
 **Full description** (max 4000)
 ```
-Most fitness apps reward you for showing up and quietly forget the days you don't. NoWomp is built around the days you don't.
+Stop skipping the gym. NoWomp is the gym habit app that calls out your excuses.
+
+Schedule your sessions, check in at the gym, and keep your streak alive. Skip one and you have to explain yourself, and your own sleep and recovery data checks whether the excuse holds up:
+"You said 'too tired' but slept 8h 12m with 84% recovery. 🤨"
 
 "Womp womp" is the sad trombone that plays after a sorry excuse. NoWomp means: don't womp womp. Don't whine, just show up.
 
-SHOW UP, FOR REAL
-• Schedule your workouts. Only scheduled days count, so rest days never hurt your streak.
-• Sessions only count when you start them at one of your places: your gym, your home, or where you play sport.
-• Sport keeps your streak alive too, and is counted separately from workouts.
-
-SKIPPING IS ALLOWED. SILENCE ISN'T.
-• Can't make it? Make an excuse before you skip.
-• Miss a workout without a word and the app asks why the next time you open it.
-• Freeze tokens, earned every 15-workout streak, protect your streak once.
-• No token? Redemption gives you one chance a week to save it.
-
 YOUR EXCUSES, FACT-CHECKED
-Connect Health Connect and the Lab checks your excuses against your own body:
-"You said 'too tired' but slept 8h 12m with 84% recovery."
-• Your weakest weekday and time of day
-• How drinks, caffeine, late dinners and stress show up in the next morning's heart rate, HRV and sleep
+Connect Health Connect and the Lab compares every excuse with your sleep, recovery, steps and heart rate.
+• See which excuses your body backs up, and which it doesn't
+• Your weakest weekday and time of day for skipping
+• How drinks, caffeine, late dinners and stress hit the next morning's HRV, resting heart rate and sleep
 • Your best time to train
 Anxiety, illness and emergencies are never called lies.
 
-RUN EXPERIMENTS ON YOURSELF
-Does a later bedtime really hurt your workouts? Run a proper 4-week experiment: rule on, rule off, repeated. A result only counts if it beats your own day-to-day noise and repeats.
+YOU CAN'T FAKE SHOWING UP
+• Plan your week. Only scheduled days count, so rest days never break your streak.
+• A session only counts when you start it at one of your places: your gym, your home, or where you play sport. Your location is checked.
+• Sport (football, badminton, climbing…) keeps your streak alive too, and is counted separately.
+• Reminders before every session, and a timer while you train.
+NoWomp doesn't log sets or reps. Keep using your favourite workout log; NoWomp makes sure you get there.
 
-THE FUN IS BACK
-• 35 pixel-art trophies to collect, plus a hidden Hall of Shame
+SKIPPING IS ALLOWED. SILENCE ISN'T.
+• Can't make it? Give your excuse before you skip.
+• Miss a session without a word and the app asks why the next time you open it.
+• Freeze tokens, earned every 15-session streak, protect your streak once.
+• No token? Redemption gives you one chance a week to save it.
+
+SLEEP AND RECOVERY, ON YOUR SIDE
+Daily recovery and sleep scores worked out on your phone from HRV, resting heart rate and sleep stages, plus steps, heart-rate zones, weight and long-term trends.
+
+EXPERIMENT ON YOURSELF
+Does a late bedtime really wreck your workouts? Does caffeine help? Run a proper 4-week experiment: rule on, rule off, repeated. A result only counts if it beats your own day-to-day noise.
+
+GYM MOTIVATION THAT'S ACTUALLY FUN
+• 35 pixel-art trophies, plus a hidden Hall of Shame for the excuse-makers
 • A penguin home-screen widget whose mood follows your day. Poke him.
-• A super-saiyan celebration with 8-bit sounds every time you finish
-• A Sunday recap of your week
+• A super-saiyan celebration with 8-bit sounds after every session
+• Distance journeys and a Sunday recap of your week
 
-YOUR DATA STAYS ON YOUR PHONE
-No account. No ads. No analytics. No tracking. Everything is stored on your device, and health data is read on your phone and never leaves it. Backups are a file you save yourself.
-
-The only time NoWomp uses the internet is the map when you add a place: map images and place searches come from OpenStreetMap.
+PRIVATE AND OFFLINE
+No account. No ads. No analytics. No tracking. Your sessions and health data are stored only on your phone and never leave it. Backups are a file you save yourself. The only internet use is the map when you add a place (OpenStreetMap).
 
 FREE AND OPEN SOURCE
-NoWomp is free software (AGPLv3). Read the code, build it yourself, or contribute:
+NoWomp is free software (AGPLv3). Read the code or build it yourself:
 https://github.com/akashkashyaps/nowomp
 
 NoWomp is for general fitness and wellness. It is not a medical device and doesn't give medical advice.
