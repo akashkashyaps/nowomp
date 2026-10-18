@@ -24,7 +24,7 @@ Schedule it. Show up. Or explain yourself, and let your own body fact-check the 
 
 [**Install**](#install) · [**Features**](#features) · [**Privacy**](#privacy) · [**Build from source**](#build-from-source) · [**Contributing**](#contributing) · [**Roadmap**](#roadmap)
 
-<img src="docs/images/workout-complete.png" alt="Workout complete screen with the powered-up penguin" width="260" />
+<img src="docs/images/screens-lab.png" alt="The Lab: experiments, habit insights, excuse fact-check" width="860" />
 
 </div>
 
@@ -53,6 +53,10 @@ Most fitness apps reward you for showing up and quietly forget the days you don'
 - **Habits → body**: how drinks, caffeine, late dinners and stress show up in the next morning's HRV, resting heart rate, sleep and recovery.
 - **Best time to train**: your show-up rate by time of day.
 
+<div align="center">
+<img src="docs/images/screens-progress.png" alt="Experiment result, trophy unlock and Sunday recap" width="860" />
+</div>
+
 ### 🔬 Self-experiments
 - Scientific **4-week ABAB experiments** (rule on, off, on, off) with a randomised start, a pre-registered main measure, daily check-ins and locked results until the end.
 - A verdict only counts if it beats your own day-to-day noise *and* repeats in both rule-on weeks.
@@ -66,11 +70,15 @@ Most fitness apps reward you for showing up and quietly forget the days you don'
 <img src="docs/images/trophies.png" alt="All 35 pixel-art trophies" width="640" />
 </div>
 
+<div align="center">
+<img src="docs/images/screens-core.png" alt="Today, You and the trophy room" width="860" />
+</div>
+
 ### 📱 Home-screen widget
 A penguin whose mood follows your day: hyped in the morning, impatient as the session nears, furious when you're late, crying at 9pm when the streak is genuinely at risk. Poke him and he gets annoyed.
 
 <div align="center">
-<img src="docs/images/widget-moods.png" alt="The widget penguin through the day" width="640" />
+<img src="docs/images/widget-moods.png" alt="The widget penguin through the day, and the 1×1 size" width="860" />
 </div>
 
 ### ❤️ Health (via Health Connect)
