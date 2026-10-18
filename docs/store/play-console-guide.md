@@ -254,9 +254,9 @@ NoWomp 2.0 is a big one:
 • New pixel-art icon and 8-bit sounds
 Still offline. Still no account, no ads.
 ```
-4. **Next → Save → Send for review.** Choose a **staged rollout of 20%**
-   first; raise it to 100% after a few days if no crashes show up in
-   **Quality → Android vitals**.
+4. **Next → Save → Send for review.** Roll out to **100%**: there are no
+   active users yet, so there's nobody a staged rollout would protect. Watch
+   **Quality → Android vitals** for crashes after launch.
 
 Reviews of updates with new permissions (Health Connect, foreground service)
 usually take 1–7 days.
