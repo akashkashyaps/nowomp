@@ -28,12 +28,12 @@
     <p>NoWomp (&quot;the App&quot;) is a gym accountability app built to help you stay consistent with your workout schedule. Your privacy matters. This policy explains what data the App accesses, how it is used, and your rights.</p>
     <p>NoWomp is open source under the GNU Affero General Public License v3. This policy covers the official builds published by the NoWomp project. Modified versions built by others are their responsibility.</p>
     <h2>1. Data Storage</h2>
-    <p>All your data is stored locally on your device, in an on-device SQLite database and the App&#x27;s private storage. No data is transmitted to any server, cloud service or third party. We do not collect, store or process any of your personal data on our servers. We do not have servers.</p>
+    <p>All your data is stored locally on your device, in an on-device SQLite database and the App&#x27;s private storage. No data is transmitted to any server, cloud service or third party. The one exception is the place map, described under Internet below, which you use only when adding or editing a place. We do not collect, store or process any of your personal data on our servers. We do not have servers.</p>
     <h2>2. Information the App Stores Locally</h2>
     <p>The following information is stored exclusively on your device:</p>
     <ul>
       <li><strong>User profile:</strong> your name and settings, and optionally your age, biological sex, sleep goal, steps goal and measured maximum heart rate, which improve the accuracy of the App&#x27;s calculations.</li>
-      <li><strong>Locations:</strong> the coordinates of the gym and/or home location you register, used to verify workouts.</li>
+      <li><strong>Locations:</strong> the places you save (each a name, a type of gym, home or sport, coordinates and a radius), used to verify that you start sessions where you say. Each session records the type and name of the place it was started at. Your current position is checked against these on your device and is never stored.</li>
       <li><strong>Workout records:</strong> dates, start and end times, durations and completion status.</li>
       <li><strong>Schedule data:</strong> your scheduled workouts and planned times.</li>
       <li><strong>Excuses:</strong> the excuses you log, when you logged them, the planned time of the workout you skipped, and what followed (freeze token used or redemption started).</li>
@@ -53,7 +53,7 @@
       <li><strong>Exact alarm / boot completed:</strong> so local reminders still fire on time after a restart.</li>
       <li><strong>Vibrate:</strong> haptic feedback.</li>
       <li><strong>Foreground service:</strong> while a workout is running, the App shows an ongoing notification with a timer so the session keeps counting when you leave the App. It starts only when you start a workout, stops when it ends, reads no sensors, and records nothing beyond the workout entry described in Section 2.</li>
-      <li><strong>Internet:</strong> used only to display an embedded map when you look up your gym&#x27;s coordinates, and to open links (such as this policy) in your browser. The App sends none of your data over the internet.</li>
+      <li><strong>Internet:</strong> used only when you add or edit a place, and to open links (such as this policy) in your browser. The place map loads map images from OpenStreetMap&#x27;s tile servers, which see your device&#x27;s IP address and the map area being viewed. If you search for a place, the words you type are sent to OpenStreetMap&#x27;s Nominatim search service. Nothing else is sent: your saved places, sessions, health data and everything else stay on your device. OpenStreetMap&#x27;s own privacy policy applies to those requests: <a href="https://osmfoundation.org/wiki/Privacy_Policy">osmfoundation.org/wiki/Privacy_Policy</a></li>
       <li><strong>Health Connect (read):</strong> with your explicit permission, the App reads heart rate variability, resting heart rate, heart rate, sleep sessions and stages, steps, distance, total and active calories burned, weight and exercise sessions from Android Health Connect. This data is read on-device only, cached in the App&#x27;s local database to calculate your scores and insights, and never transmitted off your device. You can revoke access at any time in Health Connect settings; uninstalling the App removes the cached copy.</li>
       <li><strong>Health Connect (write, optional, off by default):</strong> weight is the only thing the App can write, and only if you turn on &quot;Also save to Health Connect&quot; when logging weight. That weight then becomes visible to other apps you have granted Health Connect access. The App writes nothing else and never deletes your Health Connect data.</li>
     </ul>

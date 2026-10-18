@@ -217,9 +217,12 @@ export class TestDataService {
             const added = await insert(
               'workouts',
               `INSERT OR IGNORE INTO workouts
-                 (user_id, verified, workout_date, duration, status, started_at, ended_at)
-               VALUES (?, 1, ?, ?, 'completed', ?, ?)`,
-              [user.id, date, duration, start.toISOString(), end.toISOString()]
+                 (user_id, verified, workout_date, duration, status, started_at, ended_at, activity, place_name)
+               VALUES (?, 1, ?, ?, 'completed', ?, ?, ?, ?)`,
+              // Saturdays are five-a-side, so the split between workouts and sport shows up.
+              day === 6
+                ? [user.id, date, duration, start.toISOString(), end.toISOString(), 'sport', 'Five-a-side']
+                : [user.id, date, duration, start.toISOString(), end.toISOString(), 'gym', 'Gym']
             );
             if (added) workoutDates.add(date);
           }

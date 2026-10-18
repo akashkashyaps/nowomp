@@ -52,9 +52,9 @@ It's for the gym, home workouts, sports, or anything you schedule and want to ac
 You don't need to know anything about code.
 
 1. **Install the app.** It's coming soon to Google Play. Until then, see [Install](#install).
-2. **Set your places.** On first launch, NoWomp asks for your gym (and home, if you work out there). Workouts only count when you start them within about 200 m of one of these.
+2. **Add your places.** On first launch, add where you train: your gym, your home, or where you play sport. Search for it or drag the map to it. Sessions only count when you start them at one of your places.
 3. **Plan your week.** Tap the 📅 button on Today and pick your workout days and times. Only scheduled days count, so rest days never hurt your streak.
-4. **Show up.** Tap **START WORKOUT** when you arrive and **END WORKOUT** when you're done.
+4. **Show up.** Tap **START WORKOUT** when you arrive and **END WORKOUT** when you're done. NoWomp works out from where you are whether it's a workout or sport.
 5. **Can't make it? Say so.** Tap **MAKE EXCUSE** before you skip. If you miss a workout without a word, the app asks why the next time you open it.
 6. **Optional extras:**
    - Connect **Health Connect** in the Health tab for sleep, recovery and excuse fact-checks.
@@ -80,7 +80,8 @@ Everything you need is in [For developers](#for-developers).
 
 This is the heart of the app. Your **streak** only grows from real, location-checked workouts.
 
-- **Scheduled, verified workouts.** Start and end them at your gym or home. Each one is timed and saved as verified.
+- **Scheduled, verified sessions.** Start and end them at one of your places. Each one is timed and saved as verified.
+- **Gym, home and sport.** Save up to 10 named places, picked on a map. Gym and home sessions are workouts. A sport session (football, badminton, climbing…) keeps your streak alive too, but is counted on its own in your stats.
 - **Excuses, not silence.** You can skip a day, but you have to say why. Miss a workout without a word and the app locks until you explain yourself, within 24 hours.
 - **Freeze tokens.** Every time your streak hits a multiple of 15, you earn a token that absorbs one excuse. You can hold up to 5.
 - **Redemption.** No token? You get one chance a week to save your streak by completing a redemption workout within 48 hours. You can't make excuses while a redemption is active.
@@ -163,6 +164,7 @@ Recovery and sleep scores, worked out on your phone from HRV, resting heart rate
 NoWomp has **no backend**. All your data lives in a database on your phone.
 
 - No account, no analytics, no tracking, no ads, no third-party data SDKs.
+- The only network use is the map when you add a place: map images come from OpenStreetMap, and place searches go to its search service. Your saved places never leave the phone.
 - Health Connect data is read on your phone and never leaves it.
 - Backups are a file *you* export and keep wherever you choose.
 - AI features only ever copy text to your clipboard. You decide where to paste it.
@@ -205,7 +207,7 @@ adb install -r app/build/outputs/apk/release/app-release.apk
 ```
 Without a release keystore, the build falls back to the debug key, which is fine for your own phone. To sign it properly, set `NOWOMP_UPLOAD_STORE_FILE`, `NOWOMP_UPLOAD_STORE_PASSWORD`, `NOWOMP_UPLOAD_KEY_ALIAS` and `NOWOMP_UPLOAD_KEY_PASSWORD` in `~/.gradle/gradle.properties`. Never commit a keystore.
 
-**Testing tools:** tap the **ACCOUNT INFO** heading in Settings five times to open the developer panel. It can fill the app with realistic test data.
+**Testing tools:** tap **Version** in Settings five times to open the developer panel. It can fill the app with realistic test data.
 
 **Checks:**
 ```bash

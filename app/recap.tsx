@@ -54,7 +54,11 @@ export default function RecapScreen() {
           </View>
 
           <View style={styles.grid}>
-            <Stat label="WORKOUTS" value={String(recap.workouts)} />
+            {recap.sport > 0 ? (
+              <Stat label="WORKOUT + SPORT" value={`${recap.workouts - recap.sport} + ${recap.sport}`} />
+            ) : (
+              <Stat label="WORKOUTS" value={String(recap.workouts)} />
+            )}
             <Stat label="SKIPPED" value={String(recap.skips)} danger={recap.skips > 0} />
             <Stat label="SHOW-UP" value={recap.showUpRate != null ? `${recap.showUpRate}%` : '–'} />
           </View>

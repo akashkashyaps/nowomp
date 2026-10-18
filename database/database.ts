@@ -23,10 +23,16 @@ export interface User {
   created_at: string;
 }
 
+/** Where a session happens. Gym and home are workouts; sport is counted apart. */
+export type PlaceType = 'gym' | 'home' | 'sport';
+
+/** A saved place. The table is still called `gyms` from when it held only one. */
 export interface Gym {
   id: number;
   user_id: number;
-  location_type: 'gym' | 'home';
+  location_type: PlaceType;
+  /** The user's label, e.g. "PureGym" or "Football pitch". Older rows have none. */
+  name?: string | null;
   latitude: number;
   longitude: number;
   radius: number;
@@ -42,6 +48,9 @@ export interface Workout {
   status: 'not_started' | 'in_progress' | 'completed';
   started_at?: string;
   ended_at?: string;
+  /** Set from the place it was started at. Rows from before places had types are null (a workout). */
+  activity?: PlaceType | null;
+  place_name?: string | null;
   created_at: string;
 }
 
@@ -416,6 +425,7 @@ class Database {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         location_type TEXT NOT NULL DEFAULT 'gym',
+        name TEXT DEFAULT NULL,
         latitude REAL NOT NULL,
         longitude REAL NOT NULL,
         radius REAL DEFAULT 150,
@@ -434,6 +444,8 @@ class Database {
         status TEXT DEFAULT 'completed',
         started_at TEXT DEFAULT NULL,
         ended_at TEXT DEFAULT NULL,
+        activity TEXT DEFAULT NULL,
+        place_name TEXT DEFAULT NULL,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (id)
       );
@@ -837,6 +849,14 @@ class Database {
         ALTER TABLE workouts ADD COLUMN ended_at TEXT DEFAULT NULL;
       `).catch(() => {});
 
+      await this.db.execAsync(`
+        ALTER TABLE workouts ADD COLUMN activity TEXT DEFAULT NULL;
+      `).catch(() => {});
+
+      await this.db.execAsync(`
+        ALTER TABLE workouts ADD COLUMN place_name TEXT DEFAULT NULL;
+      `).catch(() => {});
+
     } catch (error) {
       console.log('Workout migration handled or not needed:', error);
     }
@@ -983,6 +1003,10 @@ class Database {
       await this.db.execAsync(`
         ALTER TABLE gyms ADD COLUMN location_type TEXT DEFAULT 'gym';
       `).catch(() => {}); // Ignore if column already exists
+
+      await this.db.execAsync(`
+        ALTER TABLE gyms ADD COLUMN name TEXT DEFAULT NULL;
+      `).catch(() => {});
 
     } catch (error) {
       console.log('Gym table migration handled or not needed:', error);

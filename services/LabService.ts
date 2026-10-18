@@ -57,7 +57,7 @@ export interface LabReport {
 /** Raw rows shared by the Lab report and the achievement checks. */
 export interface LabData {
   skips: Skip[];
-  workouts: { workout_date: string; started_at: string | null; duration: number | null }[];
+  workouts: { workout_date: string; started_at: string | null; duration: number | null; activity?: string | null }[];
   metrics: Map<string, DayMetrics>;
   exerciseDates: Set<string>;
   stress: Map<string, number>;
@@ -119,7 +119,7 @@ export class LabService {
       [user.id]
     );
     const workouts = await db.getAllAsync<LabData['workouts'][number]>(
-      `SELECT workout_date, started_at, duration FROM workouts
+      `SELECT workout_date, started_at, duration, activity FROM workouts
        WHERE user_id = ? AND verified = 1 AND status = 'completed'
        ORDER BY workout_date ASC`,
       [user.id]

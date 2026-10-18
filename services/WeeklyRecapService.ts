@@ -20,6 +20,8 @@ export interface WeeklyRecap {
   mood: RecapMood;
   headline: string;
   workouts: number;
+  /** How many of `workouts` were sport sessions. */
+  sport: number;
   skips: number;
   minutes: number;
   /** Workouts / (workouts + skips), 0-100; null with no sessions. */
@@ -136,6 +138,7 @@ export class WeeklyRecapService {
       mood,
       headline,
       workouts: workouts.length,
+      sport: workouts.filter((w) => w.activity === 'sport').length,
       skips: skips.length,
       minutes,
       showUpRate,

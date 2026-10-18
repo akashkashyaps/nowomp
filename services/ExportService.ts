@@ -408,8 +408,8 @@ export class ExportService {
         if (workouts && workouts.length > 0) {
           for (const workout of workouts) {
             await db.runAsync(
-              'INSERT INTO workouts (user_id, verified, workout_date, duration, status, started_at, ended_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-              [userId, workout.verified, workout.workout_date, workout.duration, workout.status, workout.started_at, workout.ended_at, workout.created_at]
+              'INSERT INTO workouts (user_id, verified, workout_date, duration, status, started_at, ended_at, activity, place_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [userId, workout.verified, workout.workout_date, workout.duration, workout.status, workout.started_at, workout.ended_at, workout.activity ?? null, workout.place_name ?? null, workout.created_at]
             );
           }
           console.log(`Imported ${workouts.length} workouts`);
@@ -441,11 +441,11 @@ export class ExportService {
         if (gyms && gyms.length > 0) {
           for (const gym of gyms) {
             await db.runAsync(
-              // location_type must be restored: GymService looks locations up by
+              // location_type must be restored: places are listed and matched by
               // type, so a NULL here makes the restored gym invisible to the app.
               // Older backups predate the column, so default to 'gym'.
-              'INSERT INTO gyms (user_id, location_type, latitude, longitude, radius, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-              [userId, gym.location_type ?? 'gym', gym.latitude, gym.longitude, gym.radius, gym.created_at]
+              'INSERT INTO gyms (user_id, location_type, name, latitude, longitude, radius, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [userId, gym.location_type ?? 'gym', gym.name ?? null, gym.latitude, gym.longitude, gym.radius, gym.created_at]
             );
           }
           console.log(`Imported ${gyms.length} gyms`);

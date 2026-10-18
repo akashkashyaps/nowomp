@@ -11,6 +11,7 @@ import { JourneyService } from '@/services/JourneyService';
 import { FreezeTokenService } from '@/services/FreezeTokenService';
 import { RedemptionWorkoutService } from '@/services/RedemptionWorkoutService';
 import { REDEMPTION_BLOCKS_EXCUSES } from '@/services/ExcuseSubmissionService';
+import { isSport, placeName } from '@/services/PlaceService';
 import { CalendarDays } from 'lucide-react-native';
 import { TourTarget, useFirstVisitTour } from '@/components/tour/Tour';
 import { HOME_TOUR, HOME_TOUR_STEPS } from '@/constants/tour';
@@ -219,10 +220,13 @@ export default function HomeScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setLoading(true);
     try {
-      const isAtGym = await LocationService.verifyGymLocation();
+      const place = await LocationService.findCurrentPlace();
 
-      if (isAtGym) {
-        const workout = await WorkoutService.startWorkout();
+      if (place) {
+        const workout = await WorkoutService.startWorkout({
+          activity: place.location_type,
+          placeName: placeName(place),
+        });
         setCurrentWorkout(workout);
         setWorkoutTimer(0);
         startTimer();
@@ -271,7 +275,7 @@ export default function HomeScreen() {
       } else {
         Alert.alert(
           '🚨 BUSTED!',
-          "You're not at your gym. Stop lying and get there first.",
+          "You're not at any of your places. Stop lying and get there first.",
           [{ text: 'Fine...', style: 'destructive' }],
         );
       }
@@ -326,6 +330,7 @@ export default function HomeScreen() {
         pathname: '/workout-success',
         params: {
           duration: completedWorkout.duration,
+          ...(isSport(completedWorkout.activity) ? { sport: '1' } : {}),
           ...(freezeTokenEarned ? { freezeTokenEarned: '1' } : {}),
           ...(completedJourney
             ? {
@@ -493,7 +498,12 @@ export default function HomeScreen() {
 
       {currentWorkout && (
         <View style={styles.timerContainer}>
-          <Text style={styles.timerLabel}>WORKOUT IN PROGRESS</Text>
+          <Text style={styles.timerLabel}>
+            {isSport(currentWorkout.activity) ? 'SPORT IN PROGRESS' : 'WORKOUT IN PROGRESS'}
+          </Text>
+          {currentWorkout.place_name ? (
+            <Text style={styles.timerPlace}>📍 {currentWorkout.place_name}</Text>
+          ) : null}
           <Text style={styles.timerTime}>{formatTime(workoutTimer)}</Text>
         </View>
       )}
@@ -703,6 +713,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bodyBold,
     fontSize: 14,
     color: colors.textMuted,
+    marginBottom: 8,
+  },
+  timerPlace: {
+    fontFamily: fonts.bodySemi,
+    fontSize: 13,
+    color: colors.textDim,
+    marginTop: -4,
     marginBottom: 8,
   },
   timerTime: {

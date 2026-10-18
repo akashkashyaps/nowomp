@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { UserService } from '@/services/UserService';
 import { database } from '@/database/database';
 import { DailyMaintenanceService } from '@/services/DailyMaintenanceService';
+import { PlaceService } from '@/services/PlaceService';
 
 import { colors } from '@/constants/theme';
 export default function IndexScreen() {
@@ -28,7 +29,13 @@ export default function IndexScreen() {
       // Check if user exists
       const user = await UserService.getCurrentUser();
       
-      if (user) {
+      if (user && (await PlaceService.count()) === 0) {
+        // Named but never added a place (the app was closed mid-setup):
+        // finish onboarding, or there's nowhere to start a session.
+        if (isMounted.current) {
+          router.replace('/onboarding/workout-locations');
+        }
+      } else if (user) {
         // Check if there's a missed workout that needs an excuse
         const pendingExcuseDate = await DailyMaintenanceService.getPendingExcuseDate();
 

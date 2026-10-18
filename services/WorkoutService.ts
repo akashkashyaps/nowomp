@@ -1,4 +1,4 @@
-import { database, Workout } from '@/database/database';
+import { database, Workout, PlaceType } from '@/database/database';
 import { UserService } from './UserService';
 import { getTodayLocal, getLocalDateString, logTimezoneInfo } from '@/utils/dateUtils';
 import { ScheduledWorkoutService } from './ScheduledWorkoutService';
@@ -7,7 +7,8 @@ import { RedemptionWorkoutService } from './RedemptionWorkoutService';
 import { NotificationService } from './NotificationService';
 
 export class WorkoutService {
-  static async startWorkout(): Promise<Workout> {
+  /** Starts a session at a saved place; the place's type decides whether it's a workout or sport. */
+  static async startWorkout(at?: { activity: PlaceType; placeName: string }): Promise<Workout> {
     const db = await database.getDatabase();
     const user = await UserService.getCurrentUser();
     
@@ -47,8 +48,8 @@ export class WorkoutService {
 
     // Create the workout entry
     const result = await db.runAsync(
-      'INSERT INTO workouts (user_id, verified, workout_date, status, started_at) VALUES (?, ?, ?, ?, ?)',
-      [user.id, true, today, 'in_progress', now]
+      'INSERT INTO workouts (user_id, verified, workout_date, status, started_at, activity, place_name) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [user.id, true, today, 'in_progress', now, at?.activity ?? null, at?.placeName ?? null]
     );
 
     const workout = await db.getFirstAsync<Workout>(
@@ -333,14 +334,36 @@ export class WorkoutService {
     return result?.count || 0;
   }
 
-  static async getAverageGymDuration(): Promise<number> {
+  /** Verified sessions split into workouts (gym and home) and sport. */
+  static async getSessionCounts(): Promise<{ workouts: number; sport: number }> {
+    const db = await database.getDatabase();
+    const user = await UserService.getCurrentUser();
+    if (!user) return { workouts: 0, sport: 0 };
+
+    const result = await db.getFirstAsync<{ workouts: number; sport: number }>(
+      `SELECT COALESCE(SUM(CASE WHEN activity = 'sport' THEN 0 ELSE 1 END), 0) AS workouts,
+              COALESCE(SUM(CASE WHEN activity = 'sport' THEN 1 ELSE 0 END), 0) AS sport
+       FROM workouts WHERE user_id = ? AND verified = ? AND status = ?`,
+      [user.id, true, 'completed']
+    );
+    return { workouts: result?.workouts ?? 0, sport: result?.sport ?? 0 };
+  }
+
+  /**
+   * Average session length in seconds. Pass 'sport' for sport sessions;
+   * anything else averages workouts only, so a 90-minute match doesn't
+   * inflate the gym average.
+   */
+  static async getAverageGymDuration(kind: 'workout' | 'sport' = 'workout'): Promise<number> {
     const db = await database.getDatabase();
     const user = await UserService.getCurrentUser();
 
     if (!user) return 0;
 
     const result = await db.getFirstAsync<{avg_duration: number}>(
-      'SELECT AVG(duration) as avg_duration FROM workouts WHERE user_id = ? AND verified = ? AND status = ? AND duration IS NOT NULL',
+      `SELECT AVG(duration) as avg_duration FROM workouts
+       WHERE user_id = ? AND verified = ? AND status = ? AND duration IS NOT NULL
+       AND ${kind === 'sport' ? "activity = 'sport'" : "(activity IS NULL OR activity != 'sport')"}`,
       [user.id, true, 'completed']
     );
 

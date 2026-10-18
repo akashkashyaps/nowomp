@@ -13,6 +13,7 @@ import { colors, fonts } from '@/constants/theme';
 /** Streak lengths worth calling out. */
 const STREAK_MILESTONES = [7, 14, 30, 50, 100, 150, 200, 365];
 const TITLES = ['POWERED UP', 'BEAST MODE', 'NO WOMP TODAY', 'ABSOLUTE UNIT', 'DIFFERENT BREED'];
+const SPORT_TITLES = ['GAME ON', 'MVP ENERGY', 'NO WOMP TODAY', 'BALLER', 'FULL TIME'];
 const HERO_WIDTH = 230;
 
 const fmtClock = (secs: number) => {
@@ -32,15 +33,20 @@ const fmtClock = (secs: number) => {
 export default function WorkoutSuccessScreen() {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const { duration, freezeTokenEarned, journeyName, streak } = useLocalSearchParams<{
+  const { duration, freezeTokenEarned, journeyName, streak, sport } = useLocalSearchParams<{
     duration?: string;
+    sport?: string;
     freezeTokenEarned?: string;
     journeyName?: string;
     streak?: string;
   }>();
   const seconds = duration ? parseInt(duration, 10) || 0 : 0;
   const streakCount = streak ? parseInt(streak, 10) || 0 : 0;
-  const [title] = useState(() => TITLES[Math.floor(Math.random() * TITLES.length)]);
+  const isSport = sport === '1';
+  const [title] = useState(() => {
+    const pool = isSport ? SPORT_TITLES : TITLES;
+    return pool[Math.floor(Math.random() * pool.length)];
+  });
   const [burst, setBurst] = useState(false);
   const [isBest, setIsBest] = useState(false);
   const [week, setWeek] = useState<number | null>(null);
@@ -68,12 +74,13 @@ export default function WorkoutSuccessScreen() {
       .then((best) => setIsBest(streakCount > 1 && streakCount >= best))
       .catch(() => {});
     WorkoutService.getThisWeekWorkouts().then(setWeek).catch(() => {});
-    WorkoutService.getAverageGymDuration()
+    // Sport is compared with your sport average, not your gym sessions.
+    WorkoutService.getAverageGymDuration(isSport ? 'sport' : 'workout')
       .then((avg) => setVsAvg(avg > 0 && seconds > 0 ? Math.round((seconds - avg) / 60) : null))
       .catch(() => {});
     const id = clock.addListener(({ value }) => setClockText(fmtClock(value)));
     return () => clock.removeListener(id);
-  }, [clock, streakCount, seconds]);
+  }, [clock, streakCount, seconds, isSport]);
 
   const onBurst = () => {
     setBurst(true);

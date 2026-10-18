@@ -30,7 +30,7 @@ interface Section {
 
 const QUICK_RULES = [
   'Schedule workouts. Only scheduled days count.',
-  'Start and end them at your gym or home. Your location is checked.',
+  'Start and end them at one of your places (gym, home or sport). Your location is checked.',
   "Can't go? Make an excuse before you skip. Missed ones must be explained.",
   'Freeze tokens and redemption can save your streak, but never grow it.',
   'The Lab checks your excuses against your own body data.',
@@ -44,7 +44,9 @@ const SECTIONS: Section[] = [
     summary: 'Scheduled, location-verified, timed.',
     points: [
       'Schedule workouts with the 📅 button on Today or in You → Plan workouts.',
-      'Tap START WORKOUT when you arrive. You must be within about 200 m of your saved gym or home location.',
+      'Tap START WORKOUT when you arrive. You must be within the radius of one of your saved places (100–300 m, set per place).',
+      'Add places in Settings → Places: as many gyms, homes and sport venues as you need, up to 10.',
+      'A session at a Sport place counts toward your streak like a workout, but is counted separately in your stats.',
       'Tap END WORKOUT when you finish. The session is timed and saved as verified.',
       'One workout per day. Once you have made an excuse for a day, you can no longer work out that day.',
     ],

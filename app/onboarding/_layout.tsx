@@ -8,7 +8,7 @@ export default function OnboardingLayout() {
       contentStyle: { backgroundColor: colors.bg }
     }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="gym-location" />
+      <Stack.Screen name="workout-locations" />
     </Stack>
   );
 }

@@ -25,8 +25,8 @@ export const HOME_TOUR_STEPS: TourStep[] = [
   {
     target: 'home.start',
     placement: 'top',
-    title: 'START AT THE GYM',
-    body: "Tap start when you're there. Your location is checked, so it has to be real.",
+    title: 'START WHERE YOU TRAIN',
+    body: "Tap start when you're at your gym, home or sport place. Your location is checked, so it has to be real.",
   },
   {
     target: 'home.excuse',
@@ -108,7 +108,7 @@ export const YOU_TOUR_STEPS: TourStep[] = [
   {
     target: 'you.settings',
     title: 'SETTINGS',
-    body: 'Your name, gym and home locations, health profile, backups, and Replay App Tour.',
+    body: 'Your profile, your places, backups, and Replay App Tour.',
   },
 ];
 

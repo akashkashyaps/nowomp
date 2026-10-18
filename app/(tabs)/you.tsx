@@ -42,6 +42,7 @@ export default function YouScreen() {
   const [displayName, setDisplayName] = useState('');
   const [streak, setStreak] = useState(0);
   const [totalWorkouts, setTotalWorkouts] = useState(0);
+  const [totalSport, setTotalSport] = useState(0);
   const [totalSkips, setTotalSkips] = useState(0);
   const [freezeTokenStats, setFreezeTokenStats] = useState({
     availableTokens: 0,
@@ -85,13 +86,14 @@ export default function YouScreen() {
     try {
       const [streakData, workoutsData, skipsData, user] = await Promise.all([
         WorkoutService.getCurrentStreak().catch(() => 0),
-        WorkoutService.getTotalVerifiedWorkouts().catch(() => 0),
+        WorkoutService.getSessionCounts().catch(() => ({ workouts: 0, sport: 0 })),
         SkipService.getTotalSkips().catch(() => 0),
         UserService.getCurrentUser().catch(() => null),
       ]);
 
       setStreak(streakData);
-      setTotalWorkouts(workoutsData);
+      setTotalWorkouts(workoutsData.workouts);
+      setTotalSport(workoutsData.sport);
       setTotalSkips(skipsData);
       setDisplayName(user?.display_name ?? '');
       setShowReliability(await BackgroundReliabilityService.shouldPrompt());
@@ -313,7 +315,11 @@ export default function YouScreen() {
             <View style={styles.statCard}>
               <Text style={styles.statNumber}>{totalWorkouts}</Text>
               <Text style={styles.statLabel}>VERIFIED WORKOUTS</Text>
-              <Text style={styles.statEmoji}>💪</Text>
+              {totalSport > 0 ? (
+                <Text style={styles.statExtra}>+ {totalSport} SPORT ⚽</Text>
+              ) : (
+                <Text style={styles.statEmoji}>💪</Text>
+              )}
             </View>
 
             <View style={styles.statCard}>
@@ -334,7 +340,7 @@ export default function YouScreen() {
               <Text style={styles.statNumber}>
                 {formatDurationInMinutes(averageGymTime)}
               </Text>
-              <Text style={styles.statLabel}>AVG GYM MINS</Text>
+              <Text style={styles.statLabel}>AVG WORKOUT MINS</Text>
               <Text style={styles.statEmoji}>⏱️</Text>
             </View>
 
@@ -609,6 +615,12 @@ const styles = StyleSheet.create({
   statEmoji: {
     fontSize: 20,
     marginTop: 4,
+  },
+  statExtra: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 10,
+    color: colors.cyan,
+    marginTop: 8,
   },
   section: {
     marginTop: 16,

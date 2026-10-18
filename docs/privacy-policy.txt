@@ -7,12 +7,12 @@ NoWomp ("the App") is a gym accountability app built to help you stay consistent
 NoWomp is open source under the GNU Affero General Public License v3. This policy covers the official builds published by the NoWomp project. Modified versions built by others are their responsibility.
 
 1. Data Storage
-All your data is stored locally on your device, in an on-device SQLite database and the App's private storage. No data is transmitted to any server, cloud service or third party. We do not collect, store or process any of your personal data on our servers. We do not have servers.
+All your data is stored locally on your device, in an on-device SQLite database and the App's private storage. No data is transmitted to any server, cloud service or third party. The one exception is the place map, described under Internet below, which you use only when adding or editing a place. We do not collect, store or process any of your personal data on our servers. We do not have servers.
 
 2. Information the App Stores Locally
 The following information is stored exclusively on your device:
   - User profile: your name and settings, and optionally your age, biological sex, sleep goal, steps goal and measured maximum heart rate, which improve the accuracy of the App's calculations.
-  - Locations: the coordinates of the gym and/or home location you register, used to verify workouts.
+  - Locations: the places you save (each a name, a type of gym, home or sport, coordinates and a radius), used to verify that you start sessions where you say. Each session records the type and name of the place it was started at. Your current position is checked against these on your device and is never stored.
   - Workout records: dates, start and end times, durations and completion status.
   - Schedule data: your scheduled workouts and planned times.
   - Excuses: the excuses you log, when you logged them, the planned time of the workout you skipped, and what followed (freeze token used or redemption started).
@@ -31,7 +31,7 @@ The App requests the following permissions, all used solely on-device:
   - Exact alarm / boot completed: so local reminders still fire on time after a restart.
   - Vibrate: haptic feedback.
   - Foreground service: while a workout is running, the App shows an ongoing notification with a timer so the session keeps counting when you leave the App. It starts only when you start a workout, stops when it ends, reads no sensors, and records nothing beyond the workout entry described in Section 2.
-  - Internet: used only to display an embedded map when you look up your gym's coordinates, and to open links (such as this policy) in your browser. The App sends none of your data over the internet.
+  - Internet: used only when you add or edit a place, and to open links (such as this policy) in your browser. The place map loads map images from OpenStreetMap's tile servers, which see your device's IP address and the map area being viewed. If you search for a place, the words you type are sent to OpenStreetMap's Nominatim search service. Nothing else is sent: your saved places, sessions, health data and everything else stay on your device. OpenStreetMap's own privacy policy applies to those requests: https://osmfoundation.org/wiki/Privacy_Policy
   - Health Connect (read): with your explicit permission, the App reads heart rate variability, resting heart rate, heart rate, sleep sessions and stages, steps, distance, total and active calories burned, weight and exercise sessions from Android Health Connect. This data is read on-device only, cached in the App's local database to calculate your scores and insights, and never transmitted off your device. You can revoke access at any time in Health Connect settings; uninstalling the App removes the cached copy.
   - Health Connect (write, optional, off by default): weight is the only thing the App can write, and only if you turn on "Also save to Health Connect" when logging weight. That weight then becomes visible to other apps you have granted Health Connect access. The App writes nothing else and never deletes your Health Connect data.
 

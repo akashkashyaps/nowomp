@@ -1,6 +1,6 @@
 import * as Location from 'expo-location';
 import { Platform } from 'react-native';
-import { GymService } from './GymService';
+import { PlaceService, type Place } from './PlaceService';
 
 export type LocationError =
   | 'SERVICES_DISABLED'
@@ -25,68 +25,26 @@ export class LocationService {
   private static readonly HIGH_ACCURACY_TIMEOUT = 8000; // 8 seconds
   private static readonly BALANCED_ACCURACY_TIMEOUT = 5000; // 5 seconds
   private static readonly LOW_ACCURACY_TIMEOUT = 3000; // 3 seconds
-  private static readonly VERIFICATION_RADIUS = 200; // meters
 
   /**
-   * Main method to verify if user is at their gym or home location
+   * The saved place you're standing at right now (the closest one whose
+   * radius contains you), or null if you aren't at any of them.
    */
-  static async verifyGymLocation(): Promise<boolean> {
+  static async findCurrentPlace(): Promise<Place | null> {
     try {
-      // Get both gym and home locations
-      const { gym, home } = await GymService.getUserLocations();
-
-      if (!gym && !home) {
-        throw this.createError('NO_GYM_SET', 'No workout location has been set');
+      const places = await PlaceService.list();
+      if (places.length === 0) {
+        throw this.createError('NO_GYM_SET', 'No place has been set');
       }
 
-      // Check if location services are enabled
       const servicesEnabled = await this.checkLocationServicesEnabled();
       if (!servicesEnabled) {
         throw this.createError('SERVICES_DISABLED', 'Location services are disabled');
       }
 
-      // Check and request permissions
       await this.ensurePermissions();
-
-      // Get current location with fallback strategy
-      const currentLocation = await this.getCurrentLocationWithFallback();
-
-      // Check gym location if set
-      if (gym) {
-        const gymDistance = this.calculateDistance(
-          currentLocation.coords.latitude,
-          currentLocation.coords.longitude,
-          gym.latitude,
-          gym.longitude
-        );
-
-        console.log(`Distance from gym: ${gymDistance.toFixed(1)}m (threshold: ${gym.radius || this.VERIFICATION_RADIUS}m)`);
-
-        if (gymDistance <= (gym.radius || this.VERIFICATION_RADIUS)) {
-          console.log('User is at gym location');
-          return true;
-        }
-      }
-
-      // Check home location if set
-      if (home) {
-        const homeDistance = this.calculateDistance(
-          currentLocation.coords.latitude,
-          currentLocation.coords.longitude,
-          home.latitude,
-          home.longitude
-        );
-
-        console.log(`Distance from home: ${homeDistance.toFixed(1)}m (threshold: ${home.radius || this.VERIFICATION_RADIUS}m)`);
-
-        if (homeDistance <= (home.radius || this.VERIFICATION_RADIUS)) {
-          console.log('User is at home location');
-          return true;
-        }
-      }
-
-      console.log('User is not at any configured workout location');
-      return false;
+      const { latitude, longitude } = (await this.getCurrentLocationWithFallback()).coords;
+      return PlaceService.match(places, latitude, longitude);
     } catch (error: any) {
       console.error('Location verification error:', error);
       throw error;
@@ -230,24 +188,6 @@ export class LocationService {
   }
 
   /**
-   * Calculate distance between two coordinates using Haversine formula
-   */
-  private static calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-    const R = 6371e3; // Earth's radius in meters
-    const φ1 = lat1 * Math.PI / 180;
-    const φ2 = lat2 * Math.PI / 180;
-    const Δφ = (lat2 - lat1) * Math.PI / 180;
-    const Δλ = (lon2 - lon1) * Math.PI / 180;
-
-    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-              Math.cos(φ1) * Math.cos(φ2) *
-              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return R * c; // Distance in meters
-  }
-
-  /**
    * Create a structured error with user-friendly messages
    */
   private static createError(type: LocationError, message: string): LocationErrorDetails & Error {
@@ -270,7 +210,7 @@ export class LocationService {
       },
       PERMISSION_DENIED: {
         message: 'Location permission denied',
-        userMessage: 'Location permission is required to verify you\'re at the gym. Please grant permission.',
+        userMessage: 'Location permission is required to verify you\'re at one of your places. Please grant permission.',
         canRetry: true,
         requiresSettings: false,
       },
@@ -282,7 +222,7 @@ export class LocationService {
       },
       APPROXIMATE_LOCATION_ONLY: {
         message: 'Only approximate location granted',
-        userMessage: 'Precise location is required for gym verification. Please go to Settings > Apps > NoWomp > Permissions and select "Precise" location.',
+        userMessage: 'Precise location is required to check you\'re at your place. Please go to Settings > Apps > NoWomp > Permissions and select "Precise" location.',
         canRetry: false,
         requiresSettings: true,
       },
@@ -305,8 +245,8 @@ export class LocationService {
         requiresSettings: true,
       },
       NO_GYM_SET: {
-        message: 'No workout location set',
-        userMessage: 'Please set your gym or home workout location in settings first.',
+        message: 'No place set',
+        userMessage: 'Add a place first: Settings → Places.',
         canRetry: false,
         requiresSettings: false,
       },

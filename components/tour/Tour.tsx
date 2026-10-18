@@ -188,6 +188,9 @@ function TipCard({
   const slide = useRef(new Animated.Value(0)).current;
   const isLast = position >= count - 1;
   const top = step.placement === 'top';
+  // Three buttons and the dots don't fit one row on a phone, so the last tip
+  // with an action puts its buttons on a full-width row of their own.
+  const stacked = isLast && !!finalAction;
 
   useEffect(() => {
     slide.setValue(0);
@@ -215,13 +218,13 @@ function TipCard({
       </View>
       <Text style={styles.title}>{step.title}</Text>
       <Text style={styles.body}>{step.body}</Text>
-      <View style={styles.footer}>
+      <View style={[styles.footer, stacked && styles.footerStacked]}>
         <View style={styles.dots}>
           {Array.from({ length: count }, (_, i) => (
             <View key={i} style={[styles.dot, i === position && styles.dotOn]} />
           ))}
         </View>
-        <View style={styles.buttons}>
+        <View style={[styles.buttons, stacked && styles.buttonsStacked]}>
           {position > 0 && (
             <TouchableOpacity style={styles.back} onPress={onBack}>
               <Text style={styles.backText}>BACK</Text>
@@ -233,13 +236,15 @@ function TipCard({
                 <Text style={styles.backText}>DONE</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.next}
+                style={[styles.next, styles.nextStacked]}
                 onPress={() => {
                   onNext();
                   finalAction.onPress();
                 }}
               >
-                <Text style={styles.nextText}>{finalAction.label}</Text>
+                <Text style={styles.nextText} numberOfLines={1}>
+                  {finalAction.label}
+                </Text>
               </TouchableOpacity>
             </>
           ) : (
@@ -396,7 +401,10 @@ const styles = StyleSheet.create({
   dots: { flexDirection: 'row', gap: 5 },
   dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.border },
   dotOn: { width: 18, backgroundColor: colors.accent },
+  footerStacked: { flexDirection: 'column', alignItems: 'stretch', gap: 12 },
   buttons: { flexDirection: 'row', gap: 8 },
+  buttonsStacked: { alignSelf: 'stretch' },
+  nextStacked: { flex: 1, alignItems: 'center' },
   back: {
     paddingHorizontal: 14,
     paddingVertical: 10,
