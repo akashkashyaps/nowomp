@@ -41,11 +41,13 @@ grid as the trophies. Done:
 - Launcher icons (adaptive, round and Android 13 themed), splash logo and the
   notification silhouette, in `android/app/src/main/res/` and `assets/images/`
 - Favicon: `assets/images/favicon.png` (48 px)
+- **Feature graphic** 1024×500: `docs/store/feature-graphic.png`
+
+Store text, every Play Console form answer and the release steps are in
+[store/play-console-guide.md](store/play-console-guide.md).
 
 Still needed:
 
-- **Feature graphic** 1024×500. Mandatory, with no default. It can reuse the
-  look of `docs/images/social-preview.png`.
 - **Phone screenshots**, at least 2 (8 allowed). The strongest visuals are the
   Lab, the trophy room, the experiment result and the widget moods.
 
