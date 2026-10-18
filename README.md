@@ -32,9 +32,9 @@ Schedule it. Show up. Or explain yourself, and let your own body fact-check the 
 
 ### The name
 
-*Womp womp* is the sad-trombone "wah-wah" you hear when someone fails. The sound goes back to vaudeville, became the losing horn on game shows like *The Price Is Right*, played after every gloomy fact in SNL's *Debbie Downer* sketch, and lives on online as the reply to someone's sorry excuse: "I was going to go, but… womp womp."
+*Womp womp* is the sad-trombone "wah-wah" that plays when someone fails. It's the losing horn from old game shows like *The Price Is Right* and SNL's *Debbie Downer*, and online it's what you say to someone's sorry excuse: "I was going to go to the gym, but… womp womp."
 
-Every skipped workout comes with a reason and a little self-pity. NoWomp is about not giving yourself that moment: no excuses, no sad trombone. Just show up.
+**NoWomp** means exactly that: don't womp womp. Don't whine, don't make excuses, just get it done.
 
 ### Why I built it
 
