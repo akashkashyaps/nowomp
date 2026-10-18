@@ -1,0 +1,34 @@
+name: Checks
+
+# Typecheck and lint every push to main and every pull request. A native
+# Android build isn't run here: it takes ~15 minutes and needs no secrets to
+# catch what these two already catch.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Expo writes this file on `expo start`; it's git-ignored, so recreate it.
+      - run: echo '/// <reference types="expo/types" />' > expo-env.d.ts
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint

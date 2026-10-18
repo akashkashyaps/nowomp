@@ -17,6 +17,7 @@ Schedule it. Show up. Or explain yourself, and let your own body fact-check the 
 [![Version](https://img.shields.io/badge/Version-2.0.0-FFC93E?style=flat-square)](CHANGELOG.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-FF8A1F?style=flat-square)](CONTRIBUTING.md)
 
+[![Checks](https://img.shields.io/github/actions/workflow/status/akashkashyaps/nowomp/checks.yml?branch=main&style=flat-square&label=checks)](https://github.com/akashkashyaps/nowomp/actions/workflows/checks.yml)
 [![Release](https://img.shields.io/github/v/release/akashkashyaps/nowomp?style=flat-square)](https://github.com/akashkashyaps/nowomp/releases)
 [![Stars](https://img.shields.io/github/stars/akashkashyaps/nowomp?style=flat-square)](https://github.com/akashkashyaps/nowomp/stargazers)
 [![Issues](https://img.shields.io/github/issues/akashkashyaps/nowomp?style=flat-square)](https://github.com/akashkashyaps/nowomp/issues)
@@ -29,7 +30,13 @@ Schedule it. Show up. Or explain yourself, and let your own body fact-check the 
 
 ## Why NoWomp
 
-*A note from me, Akash.*
+### The name
+
+*Womp womp* is the sad-trombone "wah-wah" you hear when someone fails. The sound goes back to vaudeville, became the losing horn on game shows like *The Price Is Right*, played after every gloomy fact in SNL's *Debbie Downer* sketch, and lives on online as the reply to someone's sorry excuse: "I was going to go, but… womp womp."
+
+Every skipped workout comes with a reason and a little self-pity. NoWomp is about not giving yourself that moment: no excuses, no sad trombone. Just show up.
+
+### Why I built it
 
 Fitness tracking used to be fun. Apps had journeys to follow, trophies to chase and colour everywhere. Over time, the popular ones went corporate. The fun features were removed or buried, and what's left is plain numbers on a grey screen. Now AI is pushed in your face too: it's the main screen of many apps, and the interesting stuff is hidden somewhere inside.
 
@@ -243,6 +250,8 @@ Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 2. Keep the typecheck and lint clean.
 3. Sign off your commits with `git commit -s` ([DCO](https://developercertificate.org/)). There's nothing to sign.
 
+Everyone taking part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## Roadmap
 
 - [ ] Google Play release
@@ -257,9 +266,3 @@ Ideas and bug reports are welcome in [Issues](https://github.com/akashkashyaps/n
 NoWomp is free software, licensed under the **[GNU Affero General Public License v3.0](LICENSE)**, code and artwork alike. You may use, study, modify and share it. If you distribute a modified version, or run one for others over a network, you must release your source under the same license.
 
 The **NoWomp name and app icon** identify the official app, so forks should use their own. See [TRADEMARKS.md](TRADEMARKS.md).
-
-<div align="center">
-
-**Made with stubbornness. No womp today.** 🐧🔥
-
-</div>
