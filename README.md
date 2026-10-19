@@ -169,8 +169,10 @@ Recovery and sleep scores, worked out on your phone from HRV, resting heart rate
 | Channel | Status |
 |---|---|
 | Google Play | [NoWomp: Stop Skipping Gym](https://play.google.com/store/apps/details?id=com.nowomp.app) |
-| GitHub Releases (APK) | Not yet. Use Google Play or build it yourself |
+| GitHub Releases (APK) | [Latest release](https://github.com/akashkashyaps/nowomp/releases/latest) |
 | Build it yourself | [See below](#build-from-source) |
+
+The GitHub APK and the Play version are signed with different keys, so you can't update one with the other. To switch, export a backup in Settings, uninstall, install the other and restore.
 
 **Requirements:** Android 8.0 or newer. Health features need [Health Connect](https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata). iOS isn't supported, because Health Connect is Android-only.
 
@@ -263,7 +265,7 @@ Everyone taking part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT
 ## Roadmap
 
 - [x] Google Play release
-- [ ] GitHub Releases with per-CPU APKs
+- [x] GitHub Releases APK
 - [ ] F-Droid listing
 - [ ] Optional end-to-end-encrypted sync between devices, self-hostable
 
