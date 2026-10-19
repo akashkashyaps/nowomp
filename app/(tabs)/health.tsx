@@ -337,17 +337,7 @@ export default function HealthScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>HEALTH</Text>
-        <Text style={styles.subtitle}>
-          {formatSyncedAt(lastSynced)}
-          {showDashboard ? ' · PULL DOWN TO REFRESH' : ''}
-        </Text>
-        {showDashboard && (
-          <TouchableOpacity onPress={explainSync} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Text style={styles.sourceLine}>
-              {source ? `DATA FROM ${source.name.toUpperCase()}` : 'DATA FROM HEALTH CONNECT'} · HOW SYNC WORKS ›
-            </Text>
-          </TouchableOpacity>
-        )}
+        <Text style={styles.subtitle}>{formatSyncedAt(lastSynced)}</Text>
       </View>
 
       <ScrollView
@@ -941,6 +931,14 @@ export default function HealthScreen() {
                   MANAGE HEALTH CONNECT
                 </Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.syncHelp} onPress={explainSync}>
+                <Text style={styles.syncHelpTitle}>
+                  {source && source.name !== 'your health app' ? `DATA FROM ${source.name.toUpperCase()}` : 'DATA VIA HEALTH CONNECT'}
+                </Text>
+                <Text style={styles.syncHelpText}>
+                  New readings can take 15–30 minutes to reach NoWomp. Pull down to refresh, or tap to see how sync works.
+                </Text>
+              </TouchableOpacity>
               <Text style={styles.footnote}>
                 Recovery and sleep scores are calculated on your phone from your
                 own data. Nothing is uploaded.
@@ -991,13 +989,16 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginTop: 4,
   },
-  sourceLine: {
-    fontFamily: fonts.bodyBold,
-    fontSize: 10,
-    color: colors.accent,
-    letterSpacing: 1,
-    marginTop: 6,
+  syncHelp: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 12,
+    padding: 14,
+    marginTop: 16,
+    gap: 4,
   },
+  syncHelpTitle: { fontFamily: fonts.bodyBold, fontSize: 11, color: colors.accent, letterSpacing: 1 },
+  syncHelpText: { fontFamily: fonts.body, fontSize: 12, color: colors.textMuted, lineHeight: 17 },
   content: {
     flex: 1,
     paddingHorizontal: 32,

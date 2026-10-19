@@ -362,7 +362,8 @@ export class HealthConnectService {
   }
 
   /**
-   * The app most of the last week's readings came from, for telling the user
+   * The app most of the last week's raw readings came from (daily totals and
+   * derived rollups are stored as 'aggregate' / 'derived:*'), for telling the user
    * where their data arrives from (and why it can lag behind their watch).
    */
   static async getMainSource(): Promise<{ packageName: string; name: string } | null> {
@@ -373,7 +374,8 @@ export class HealthConnectService {
       const since = new Date(Date.now() - 7 * 86400000).toISOString();
       const row = await db.getFirstAsync<{ data_origin: string }>(
         `SELECT data_origin FROM health_records
-         WHERE user_id = ? AND data_origin != '' AND end_time >= ?
+         WHERE user_id = ? AND data_origin != '' AND data_origin != 'aggregate'
+           AND data_origin NOT LIKE 'derived:%' AND end_time >= ?
          GROUP BY data_origin ORDER BY COUNT(*) DESC LIMIT 1`,
         [user.id, since]
       );
