@@ -22,6 +22,8 @@ Schedule it. Show up. Or explain yourself, and let your own body fact-check the 
 [![Stars](https://img.shields.io/github/stars/akashkashyaps/nowomp?style=flat-square)](https://github.com/akashkashyaps/nowomp/stargazers)
 [![Issues](https://img.shields.io/github/issues/akashkashyaps/nowomp?style=flat-square)](https://github.com/akashkashyaps/nowomp/issues)
 
+[**Get it on Google Play**](https://play.google.com/store/apps/details?id=com.nowomp.app) · [**Watch the 44-second trailer**](https://youtube.com/shorts/5uVNBghiBmc)
+
 [**Why NoWomp**](#why-nowomp) · [**Get started**](#get-started) · [**Features**](#features) · [**Privacy**](#privacy) · [**For developers**](#for-developers) · [**Money**](#will-i-make-money-from-this)
 
 </div>

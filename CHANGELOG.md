@@ -28,7 +28,7 @@ All notable changes to NoWomp are documented here. The format follows [Keep a Ch
 - **Navigation**: four tabs (Today, Health, Lab, You). Plan and Settings open from Today and You.
 - **Settings**: a short list of rows (Profile, Places, Backup, Help, About) instead of one long page; coordinates are gone.
 - **Excuses** are blocked while a redemption is active.
-- **Health sync**: syncs every time you open the Health tab or return to the app (the 15-minute cooldown is gone; a sync takes about a second). The header says where data comes from (e.g. Fitbit), that you can pull down to refresh, and explains why new readings can lag 15–30 minutes behind your watch.
+- **Health sync**: syncs every time you open the Health tab or return to the app (the 15-minute cooldown is gone; a sync takes about a second). The header shows when data last synced; a card at the end of the page says which app the data comes from (e.g. Fitbit), that you can pull down to refresh, and why new readings can take up to 30 minutes to reach Health Connect.
 - **Calibration**: a "Calibrating to you" card shows the 7 days of heart data the recovery baseline needs.
 - **Backups**: format v6 now includes trophies, experiments and experiment check-ins.
 - **Deep links**: the URL scheme is now `nowomp://` (was `myapp://`).
