@@ -140,11 +140,7 @@ export default function HomeScreen() {
       if (workout) {
         setCurrentWorkout(workout);
         if (workout.started_at) {
-          const startTime = new Date(workout.started_at).getTime();
-          const now = Date.now();
-          const elapsed = Math.floor((now - startTime) / 1000);
-          setWorkoutTimer(elapsed);
-          startTimer();
+          startTimer(workout.started_at);
         }
       }
     } catch (error) {
@@ -192,13 +188,17 @@ export default function HomeScreen() {
     }
   };
 
-  const startTimer = () => {
+  // Count from the workout's start time, not by adding a second per tick:
+  // Android pauses JS timers while the app is in the background, so a
+  // per-tick counter fell behind the notification's (correct) timer.
+  const startTimer = (startedAt?: string) => {
     if (timerInterval) {
       clearInterval(timerInterval);
     }
-    const interval = setInterval(() => {
-      setWorkoutTimer((prev) => prev + 1);
-    }, 1000) as unknown as NodeJS.Timeout;
+    const start = startedAt ? new Date(startedAt).getTime() : Date.now();
+    const tick = () => setWorkoutTimer(Math.max(0, Math.floor((Date.now() - start) / 1000)));
+    tick();
+    const interval = setInterval(tick, 1000) as unknown as NodeJS.Timeout;
     setTimerInterval(interval);
   };
 
@@ -228,8 +228,7 @@ export default function HomeScreen() {
           placeName: placeName(place),
         });
         setCurrentWorkout(workout);
-        setWorkoutTimer(0);
-        startTimer();
+        startTimer(workout.started_at);
 
         // Cancel any pending notifications
         await NotificationService.cancelTodayNotifications();
