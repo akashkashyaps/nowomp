@@ -153,13 +153,19 @@ A penguin whose mood follows your day: hyped in the morning, impatient as the se
 
 ### ❤️ Health (via Health Connect)
 
-Recovery and sleep scores, worked out on your phone from HRV, resting heart rate and sleep stages. Plus steps, heart-rate zones, trends and a daily journal. Health Connect is optional: everything else works without it.
+Recovery and sleep scores, worked out on your phone from HRV, resting heart rate and sleep stages. Plus steps, heart-rate zones, trends and a daily journal.
+
+**No watch? No problem.** Workouts, excuses, streaks, trophies and the widget all work on the phone alone. A fitness watch (Fitbit, Samsung, Garmin, Pixel Watch…) adds sleep, recovery and the excuse fact-check, through Health Connect. Recovery scores calibrate to you over your first 7 days.
+
+<div align="center">
+<img src="docs/images/screens-health.png" alt="Recovery and sleep, trends, and today's activity" width="860" />
+</div>
 
 ## Install
 
 | Channel | Status |
 |---|---|
-| Google Play | Coming soon |
+| Google Play | [NoWomp: Stop Skipping Gym](https://play.google.com/store/apps/details?id=com.nowomp.app) |
 | GitHub Releases (APK) | Coming soon |
 | Build it yourself | [See below](#build-from-source) |
 
