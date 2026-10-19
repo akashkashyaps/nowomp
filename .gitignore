@@ -56,3 +56,7 @@ android/captures/
 .idea/
 *.iml
 scripts/sound-out/
+
+# Internal publishing notes: kept locally, not published
+docs/PUBLISHING.md
+docs/store/play-console-guide.md

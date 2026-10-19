@@ -2,7 +2,7 @@
   "expo": {
     "name": "NoWomp",
     "slug": "NoWomp",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
@@ -60,7 +60,7 @@
     },
     "android": {
       "package": "com.nowomp.app",
-      "versionCode": 4,
+      "versionCode": 5,
       "allowBackup": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
