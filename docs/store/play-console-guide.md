@@ -15,7 +15,7 @@ ready to paste. Character limits are noted where Play enforces them.
    If it differs, stop: the bundle will be rejected. Request an upload key reset
    from the same page (takes a few days).
 2. **Version code:** Test and release → Production → Release history. The new
-   build is **versionCode 3, version 2.0.0**. If the live version code is 3 or
+   build is **versionCode 4, version 2.0.0**. If the live version code is 3 or
    higher, raise `versionCode` in `app.json` and `android/app/build.gradle` first.
 
 ## 1. Build the app bundle

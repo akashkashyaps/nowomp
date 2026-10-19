@@ -60,7 +60,7 @@
     },
     "android": {
       "package": "com.nowomp.app",
-      "versionCode": 3,
+      "versionCode": 4,
       "allowBackup": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
