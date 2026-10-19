@@ -49,7 +49,7 @@ And no app I tried put **accountability** at its centre. Most reward you for sho
 So NoWomp is built around three ideas:
 
 1. **Accountability is the core.** Workouts are scheduled and checked against your location. Skipping is allowed, but never silent. Excuses get fact-checked against your own body data.
-2. **The fun comes back.** Pixel-art trophies, a penguin widget with moods, a super-saiyan celebration when you finish, streaks and journeys. It's all in plain sight, not hidden behind menus.
+2. **The fun comes back.** Pixel-art trophies, a penguin widget with moods, a pixel power-up celebration when you finish, streaks and journeys. It's all in plain sight, not hidden behind menus.
 3. **Your data is yours.** Everything stays on your phone. No account, no server, no analytics, no ads. The app never talks to an AI. If you want AI help, it copies a prompt for you to paste wherever you choose.
 
 It's for the gym, home workouts, sports, or anything you schedule and want to actually show up for.
@@ -60,7 +60,7 @@ It's for the gym, home workouts, sports, or anything you schedule and want to ac
 
 You don't need to know anything about code.
 
-1. **Install the app.** It's coming soon to Google Play. Until then, see [Install](#install).
+1. **Install the app.** It's free on [Google Play](https://play.google.com/store/apps/details?id=com.nowomp.app). Other options are under [Install](#install).
 2. **Add your places.** On first launch, add where you train: your gym, your home, or where you play sport. Search for it or drag the map to it. Sessions only count when you start them at one of your places.
 3. **Plan your week.** Tap the 📅 button on Today and pick your workout days and times. Only scheduled days count, so rest days never hurt your streak.
 4. **Show up.** Tap **START WORKOUT** when you arrive and **END WORKOUT** when you're done. NoWomp works out from where you are whether it's a workout or sport.
@@ -169,7 +169,7 @@ Recovery and sleep scores, worked out on your phone from HRV, resting heart rate
 | Channel | Status |
 |---|---|
 | Google Play | [NoWomp: Stop Skipping Gym](https://play.google.com/store/apps/details?id=com.nowomp.app) |
-| GitHub Releases (APK) | Coming soon |
+| GitHub Releases (APK) | Not yet. Use Google Play or build it yourself |
 | Build it yourself | [See below](#build-from-source) |
 
 **Requirements:** Android 8.0 or newer. Health features need [Health Connect](https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata). iOS isn't supported, because Health Connect is Android-only.
@@ -262,7 +262,7 @@ Everyone taking part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT
 
 ## Roadmap
 
-- [ ] Google Play release
+- [x] Google Play release
 - [ ] GitHub Releases with per-CPU APKs
 - [ ] F-Droid listing
 - [ ] Optional end-to-end-encrypted sync between devices, self-hostable
