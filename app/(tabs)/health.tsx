@@ -8,6 +8,8 @@ import {
   RefreshControl,
   Linking,
   Dimensions,
+  Alert,
+  AppState,
 } from 'react-native';
 import { useFocusEffect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -36,6 +38,7 @@ import {
   type HealthProfile,
 } from '@/services/HealthProfileService';
 import { ScoreRing } from '@/components/ScoreRing';
+import { CalibrationCard } from '@/components/health/CalibrationCard';
 import { StatTile } from '@/components/StatTile';
 import { SleepHypnogram } from '@/components/SleepHypnogram';
 import { TrendChart } from '@/components/TrendChart';
@@ -127,6 +130,7 @@ export default function HealthScreen() {
   const [grantedTypes, setGrantedTypes] = useState<Set<string>>(new Set());
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [source, setSource] = useState<{ packageName: string; name: string } | null>(null);
   const [profile, setProfile] = useState<HealthProfile | null>(null);
   const [latestWeight, setLatestWeight] = useState<{
     kg: number;
@@ -192,6 +196,7 @@ export default function HealthScreen() {
     setLatestWeight(weight);
     setAvgSteps(stepsAvg);
     setWorkouts(sessions);
+    setSource(await HealthConnectService.getMainSource());
   }, [trendRange]);
 
   // Re-read the series when the range filter changes, without a full re-sync.
@@ -231,9 +236,16 @@ export default function HealthScreen() {
         if (active) syncAndReload(false).catch(() => {});
       }, 1200);
 
+      // Coming back from the watch's own app is the moment new data is most
+      // likely to have landed in Health Connect, so check again then.
+      const sub = AppState.addEventListener('change', (state) => {
+        if (state === 'active' && active) syncAndReload(false).catch(() => {});
+      });
+
       return () => {
         active = false;
         clearTimeout(timer);
+        sub.remove();
       };
     }, [loadCached, syncAndReload]),
   );
@@ -249,6 +261,23 @@ export default function HealthScreen() {
     if (next === 'ready' || next === 'partial') {
       await syncAndReload(true);
     }
+  };
+
+  // Health Connect is a middleman: NoWomp can only see what the watch's app has
+  // already handed to it, which is usually behind what that app shows.
+  const explainSync = () => {
+    const app = source?.name && source.name !== 'your health app' ? source.name : 'your watch’s app';
+    Alert.alert(
+      'How sync works',
+      `Your data travels: watch → ${app} → Health Connect → NoWomp.
+
+` +
+        `${app} shows new steps and sleep straight away, but only passes them to Health Connect every so often, usually every 15–30 minutes. Sleep arrives once ${app} has finished processing the night.
+
+` +
+        `To get it sooner: open ${app} so it syncs, then come back here and pull down to refresh. NoWomp reads Health Connect in about a second.`,
+      [{ text: 'GOT IT' }]
+    );
   };
 
   const handleRefresh = async () => {
@@ -308,7 +337,17 @@ export default function HealthScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>HEALTH</Text>
-        <Text style={styles.subtitle}>{formatSyncedAt(lastSynced)}</Text>
+        <Text style={styles.subtitle}>
+          {formatSyncedAt(lastSynced)}
+          {showDashboard ? ' · PULL DOWN TO REFRESH' : ''}
+        </Text>
+        {showDashboard && (
+          <TouchableOpacity onPress={explainSync} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <Text style={styles.sourceLine}>
+              {source ? `DATA FROM ${source.name.toUpperCase()}` : 'DATA FROM HEALTH CONNECT'} · HOW SYNC WORKS ›
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <ScrollView
@@ -402,6 +441,7 @@ export default function HealthScreen() {
         {/* --------------------------------------------------------- dashboard */}
         {showDashboard && (
           <>
+            {baselineBuilding && <CalibrationCard days={baseline?.sampleDays ?? 0} needed={MIN_BASELINE_DAYS} />}
             {/* Asks for the inputs the formulas need instead of assuming them. */}
             {profile && (
               <HealthProfilePrompt
@@ -950,6 +990,13 @@ const styles = StyleSheet.create({
     color: colors.textFaint,
     letterSpacing: 1,
     marginTop: 4,
+  },
+  sourceLine: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 10,
+    color: colors.accent,
+    letterSpacing: 1,
+    marginTop: 6,
   },
   content: {
     flex: 1,

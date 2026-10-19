@@ -316,7 +316,7 @@ export default function YouScreen() {
               <Text style={styles.statNumber}>{totalWorkouts}</Text>
               <Text style={styles.statLabel}>VERIFIED WORKOUTS</Text>
               {totalSport > 0 ? (
-                <Text style={styles.statExtra}>+ {totalSport} SPORT ⚽</Text>
+                <Text style={styles.statExtra} numberOfLines={1}>+ {totalSport} SPORT</Text>
               ) : (
                 <Text style={styles.statEmoji}>💪</Text>
               )}

@@ -85,8 +85,35 @@ const HISTORY_WINDOW_DAYS = 30;
 const SYNC_SCHEMA_VERSION = 13;
 const SYNC_VERSION_KEY = '@health_sync_schema_version';
 
-/** Skip a re-read if we synced this recently (ms). Nine AIDL round-trips per focus is slow. */
-const SYNC_DEBOUNCE_MS = 15 * 60 * 1000;
+/**
+ * Skip a re-read only if we synced within the last minute. A full sync takes
+ * about a second and a half, and source apps (Fitbit, Samsung Health…) write
+ * to Health Connect on their own schedule, so a long debounce only meant new
+ * readings that had already arrived didn't show up.
+ */
+const SYNC_DEBOUNCE_MS = 60 * 1000;
+
+/** Display names for the apps that commonly write to Health Connect. */
+const SOURCE_NAMES: Record<string, string> = {
+  'com.fitbit.FitbitMobile': 'Fitbit',
+  'com.google.android.apps.fitness': 'Google Fit',
+  'com.google.android.apps.healthdata': 'Health Connect',
+  'com.samsung.android.shealth': 'Samsung Health',
+  'com.sec.android.app.shealth': 'Samsung Health',
+  'com.mi.health': 'Mi Fitness',
+  'com.xiaomi.wearable': 'Mi Fitness',
+  'com.xiaomi.hm.health': 'Zepp Life',
+  'com.huami.watch.hmwatchmanager': 'Zepp',
+  'com.garmin.android.apps.connectmobile': 'Garmin Connect',
+  'com.ouraring.oura': 'Oura',
+  'com.whoop.android': 'WHOOP',
+  'com.huawei.health': 'Huawei Health',
+  'com.withings.wiscale2': 'Withings',
+  'fi.polar.polarflow': 'Polar Flow',
+  'com.coros.coros': 'COROS',
+  'com.suunto.android': 'Suunto',
+  'com.strava': 'Strava',
+};
 
 export const REQUIRED_PERMISSIONS: Permission[] = [
   { accessType: 'read', recordType: 'HeartRateVariabilityRmssd' },
@@ -332,6 +359,29 @@ export class HealthConnectService {
    */
   static async getPreferredOrigin(): Promise<string | null> {
     return null;
+  }
+
+  /**
+   * The app most of the last week's readings came from, for telling the user
+   * where their data arrives from (and why it can lag behind their watch).
+   */
+  static async getMainSource(): Promise<{ packageName: string; name: string } | null> {
+    try {
+      const db = await database.getDatabase();
+      const user = await UserService.getCurrentUser();
+      if (!user) return null;
+      const since = new Date(Date.now() - 7 * 86400000).toISOString();
+      const row = await db.getFirstAsync<{ data_origin: string }>(
+        `SELECT data_origin FROM health_records
+         WHERE user_id = ? AND data_origin != '' AND end_time >= ?
+         GROUP BY data_origin ORDER BY COUNT(*) DESC LIMIT 1`,
+        [user.id, since]
+      );
+      if (!row?.data_origin) return null;
+      return { packageName: row.data_origin, name: SOURCE_NAMES[row.data_origin] ?? 'your health app' };
+    } catch {
+      return null;
+    }
   }
 
   /** Health Connect wants an array; undefined means "every source". */
