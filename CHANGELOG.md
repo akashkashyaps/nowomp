@@ -2,6 +2,11 @@
 
 All notable changes to NoWomp are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- **Restoring a backup** now keeps an active redemption's type and target date, keeps the links between excuses, freeze tokens, redemptions and workouts, restores your name and join date, and re-arms reminders for upcoming workouts and any active redemption.
+
 ## [2.0.0] - 2026-10-18
 
 ### Added

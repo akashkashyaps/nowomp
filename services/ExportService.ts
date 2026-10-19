@@ -4,6 +4,8 @@ import * as Sharing from 'expo-sharing';
 import { Alert } from 'react-native';
 import { database, type Workout, type Skip } from '@/database/database';
 import { UserService } from './UserService';
+import { NotificationService } from './NotificationService';
+import { getTodayLocal } from '@/utils/dateUtils';
 
 export class ExportService {
   static async exportToCSV(): Promise<void> {
@@ -404,13 +406,23 @@ export class ExportService {
 
         console.log('Cleared existing data for user');
 
+        // Row ids change on insert, so links between workouts, excuses, freeze
+        // tokens and redemptions are re-pointed through these maps. Without
+        // them a restored redemption shows the wrong excuse and workout.
+        const workoutIds = new Map<number, number>();
+        const excuseIds = new Map<number, number>();
+        const tokenIds = new Map<number, number>();
+        const remap = (map: Map<number, number>, id: number | null | undefined) =>
+          id == null ? null : map.get(id) ?? null;
+
         // Import workouts
         if (workouts && workouts.length > 0) {
           for (const workout of workouts) {
-            await db.runAsync(
+            const res = await db.runAsync(
               'INSERT INTO workouts (user_id, verified, workout_date, duration, status, started_at, ended_at, activity, place_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
               [userId, workout.verified, workout.workout_date, workout.duration, workout.status, workout.started_at, workout.ended_at, workout.activity ?? null, workout.place_name ?? null, workout.created_at]
             );
+            if (workout.id != null) workoutIds.set(workout.id, res.lastInsertRowId);
           }
           console.log(`Imported ${workouts.length} workouts`);
         }
@@ -462,34 +474,46 @@ export class ExportService {
           console.log(`Imported ${schedules.length} schedules`);
         }
 
-        // Import freeze tokens
-        if (freezeTokens && freezeTokens.length > 0) {
-          for (const token of freezeTokens) {
-            await db.runAsync(
-              'INSERT INTO freeze_tokens (user_id, earned_at, earned_on_streak_day, expires_at, used_at, excuse_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
-              [userId, token.earned_at, token.earned_on_streak_day, token.expires_at, token.used_at, token.excuse_id, token.created_at]
-            );
-          }
-          console.log(`Imported ${freezeTokens.length} freeze tokens`);
-        }
-
-        // Import excuse submissions
+        // Excuses and freeze tokens point at each other, so excuses go in
+        // first without their token, then tokens, then the excuse side is
+        // filled in from the token map.
         if (excuseSubmissions && excuseSubmissions.length > 0) {
           for (const excuse of excuseSubmissions) {
-            await db.runAsync(
-              'INSERT INTO excuse_submissions (user_id, excuse_text, excuse_type, submitted_for_date, submitted_at, freeze_token_used, freeze_token_id, redemption_triggered, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-              [userId, excuse.excuse_text, excuse.excuse_type, excuse.submitted_for_date, excuse.submitted_at, excuse.freeze_token_used, excuse.freeze_token_id, excuse.redemption_triggered, excuse.created_at]
+            const res = await db.runAsync(
+              'INSERT INTO excuse_submissions (user_id, excuse_text, excuse_type, submitted_for_date, submitted_at, freeze_token_used, freeze_token_id, redemption_triggered, created_at) VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?)',
+              [userId, excuse.excuse_text, excuse.excuse_type, excuse.submitted_for_date, excuse.submitted_at, excuse.freeze_token_used, excuse.redemption_triggered, excuse.created_at]
             );
+            if (excuse.id != null) excuseIds.set(excuse.id, res.lastInsertRowId);
           }
           console.log(`Imported ${excuseSubmissions.length} excuse submissions`);
         }
 
-        // Import redemption workouts
+        if (freezeTokens && freezeTokens.length > 0) {
+          for (const token of freezeTokens) {
+            const res = await db.runAsync(
+              'INSERT INTO freeze_tokens (user_id, earned_at, earned_on_streak_day, expires_at, used_at, excuse_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [userId, token.earned_at, token.earned_on_streak_day, token.expires_at, token.used_at, remap(excuseIds, token.excuse_id), token.created_at]
+            );
+            if (token.id != null) tokenIds.set(token.id, res.lastInsertRowId);
+          }
+          console.log(`Imported ${freezeTokens.length} freeze tokens`);
+        }
+
+        for (const excuse of excuseSubmissions ?? []) {
+          const newExcuse = remap(excuseIds, excuse.id);
+          const newToken = remap(tokenIds, excuse.freeze_token_id);
+          if (newExcuse != null && newToken != null) {
+            await db.runAsync('UPDATE excuse_submissions SET freeze_token_id = ? WHERE id = ?', [newToken, newExcuse]);
+          }
+        }
+
+        // Import redemption workouts. The type and target date decide whether
+        // the next scheduled session counts, so an active redemption must keep them.
         if (redemptionWorkouts && redemptionWorkouts.length > 0) {
           for (const redemption of redemptionWorkouts) {
             await db.runAsync(
-              'INSERT INTO redemption_workouts (user_id, triggered_by_excuse_id, triggered_by_missed_date, triggered_at, starts_at, deadline, completed_at, completed_workout_id, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-              [userId, redemption.triggered_by_excuse_id, redemption.triggered_by_missed_date, redemption.triggered_at, redemption.starts_at, redemption.deadline, redemption.completed_at, redemption.completed_workout_id, redemption.status, redemption.created_at]
+              'INSERT INTO redemption_workouts (user_id, triggered_by_excuse_id, triggered_by_missed_date, triggered_at, starts_at, deadline, completed_at, completed_workout_id, status, redemption_type, target_workout_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [userId, remap(excuseIds, redemption.triggered_by_excuse_id), redemption.triggered_by_missed_date, redemption.triggered_at, redemption.starts_at, redemption.deadline, redemption.completed_at, remap(workoutIds, redemption.completed_workout_id), redemption.status, redemption.redemption_type ?? 'unscheduled', redemption.target_workout_date ?? null, redemption.created_at]
             );
           }
           console.log(`Imported ${redemptionWorkouts.length} redemption workouts`);
@@ -723,8 +747,15 @@ export class ExportService {
           console.log(`Imported ${experiments.length} experiments`);
         }
 
-        // Update user metadata (schedule_changes, highest_streak)
+        // Update user metadata (name, join date, schedule_changes, highest_streak).
+        // The join date gates the weekly recap, trophies and the backup reminder.
         if (user) {
+          if (user.display_name) {
+            await db.runAsync('UPDATE users SET display_name = ? WHERE id = ?', [user.display_name, userId]);
+          }
+          if (user.created_at) {
+            await db.runAsync('UPDATE users SET created_at = ? WHERE id = ?', [user.created_at, userId]);
+          }
           if (user.schedule_changes !== undefined) {
             await db.runAsync(
               'UPDATE users SET schedule_changes = ? WHERE id = ?',
@@ -770,6 +801,24 @@ export class ExportService {
           await HealthScoreService.recomputeAll();
         } catch (scoreError) {
           console.log('Post-import score recompute skipped:', scoreError);
+        }
+
+        // Reminders live in the OS, not the database, so a restore onto a new
+        // phone has none. Re-arm them for upcoming sessions and any active
+        // redemption. (Experiment check-ins re-arm when the Lab opens.)
+        try {
+          const today = getTodayLocal();
+          for (const s of scheduledWorkouts ?? []) {
+            if (s.workout_date >= today) {
+              await NotificationService.scheduleOneTimeWorkoutNotifications(s.workout_date, s.workout_time);
+            }
+          }
+          const active = (redemptionWorkouts ?? []).find(
+            (r: any) => r.status === 'active' && new Date(r.deadline) > new Date()
+          );
+          if (active) await NotificationService.scheduleRedemptionReminders(active.deadline);
+        } catch (notifyError) {
+          console.log('Post-import reminders skipped:', notifyError);
         }
 
         Alert.alert('✅ SUCCESS', 'Data imported successfully! Your backup has been fully restored.');
