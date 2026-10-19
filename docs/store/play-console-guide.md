@@ -86,7 +86,7 @@ Does a late bedtime really wreck your workouts? Does caffeine help? Run a proper
 GYM MOTIVATION THAT'S ACTUALLY FUN
 • 35 pixel-art trophies, plus a hidden Hall of Shame for the excuse-makers
 • A penguin home-screen widget whose mood follows your day. Poke him.
-• A super-saiyan celebration with 8-bit sounds after every session
+• A pixel power-up celebration with 8-bit sounds after every session
 • Distance journeys and a Sunday recap of your week
 
 PRIVATE AND OFFLINE
