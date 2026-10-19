@@ -263,19 +263,15 @@ export default function HealthScreen() {
     }
   };
 
-  // Health Connect is a middleman: NoWomp can only see what the watch's app has
-  // already handed to it, which is usually behind what that app shows.
+  // Plain words, no device chain: NoWomp only sees what has reached Health
+  // Connect, and the app that collects the data decides when that happens.
   const explainSync = () => {
-    const app = source?.name && source.name !== 'your health app' ? source.name : 'your watch’s app';
+    const app = source && source.name !== 'your health app' ? source.name : 'your fitness app';
     Alert.alert(
-      'How sync works',
-      `Your data travels: watch → ${app} → Health Connect → NoWomp.
+      'Where your data comes from',
+      `NoWomp reads your steps, sleep and heart rate from Health Connect, Android's shared health store. ${app} adds new data to it every so often, usually every 15–30 minutes. Sleep shows up once the night has been processed.
 
-` +
-        `${app} shows new steps and sleep straight away, but only passes them to Health Connect every so often, usually every 15–30 minutes. Sleep arrives once ${app} has finished processing the night.
-
-` +
-        `To get it sooner: open ${app} so it syncs, then come back here and pull down to refresh. NoWomp reads Health Connect in about a second.`,
+Not seeing your latest numbers? Open ${app}, then come back here and pull down to refresh.`,
       [{ text: 'GOT IT' }]
     );
   };
@@ -936,7 +932,7 @@ export default function HealthScreen() {
                   {source && source.name !== 'your health app' ? `DATA FROM ${source.name.toUpperCase()}` : 'DATA VIA HEALTH CONNECT'}
                 </Text>
                 <Text style={styles.syncHelpText}>
-                  New readings can take 15–30 minutes to reach NoWomp. Pull down to refresh, or tap to see how sync works.
+                  Latest data can take up to 30 minutes to arrive. Pull down to refresh.
                 </Text>
               </TouchableOpacity>
               <Text style={styles.footnote}>

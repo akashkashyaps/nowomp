@@ -39,7 +39,7 @@ and Play delivers the right one to each phone.)
 
 **App name** (max 30)
 ```
-NoWomp: Stop Skipping the Gym
+NoWomp: Stop Skipping Gym
 ```
 
 **Short description** (max 80)
@@ -49,7 +49,7 @@ The gym habit app that calls out your excuses using your own sleep & recovery.
 
 **Full description** (max 4000)
 ```
-Stop skipping the gym. NoWomp is the gym habit app that calls out your excuses.
+Stop skipping gym. NoWomp is the gym habit app that calls out your excuses.
 
 Schedule your sessions, check in at the gym, and keep your streak alive. Skip one and you have to explain yourself, and your own sleep and recovery data checks whether the excuse holds up:
 "You said 'too tired' but slept 8h 12m with 84% recovery. 🤨"
